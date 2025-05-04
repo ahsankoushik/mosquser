@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # redis:
+  #   image: redis:alpine
+  #   container_name: redis
+  #   ports:
+  #     - "127.0.0.1:6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: always
+
+  mosquitto:
+    image: ahsankoushik/mosq-rest-auth:v.1
+    container_name: mosquitto-http-auth
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/etc/mosquitto/mosquitto.conf
+      # - ./mosquitto/auth-plugin:/mosquitto/auth-plugin
+    restart: always
+
+
+volumes:
+  redis_data:
