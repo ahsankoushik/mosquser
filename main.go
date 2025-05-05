@@ -6,23 +6,51 @@ import (
 	"os"
 
 	"github.com/ahsankoushik/mosquser/src/config"
+	dto_res "github.com/ahsankoushik/mosquser/src/dto"
 	"github.com/ahsankoushik/mosquser/src/models"
 	"github.com/ahsankoushik/mosquser/src/routes"
 	"github.com/ahsankoushik/mosquser/src/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func runServer() {
 	app := fiber.New(fiber.Config{
 		Prefork: true,
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			// Default to 500 Internal Server Error
+			code := fiber.StatusInternalServerError
+
+			// Retrieve the custom status code if it's a *fiber.Error
+			if e, ok := err.(*fiber.Error); ok {
+				code = e.Code
+			}
+
+			// Log the error (optional)
+			log.Printf("Error: %v", err)
+
+			// Send JSON error response
+			return c.Status(code).JSON(dto_res.Response{
+				Status:  code,
+				Message: err.Error(),
+				Data:    fiber.Map{},
+			})
+		},
 	})
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "http://localhost:5173",
+		AllowCredentials: true,
+	}))
 
 	config.ConnectDB()
 
 	app.Use(logger.New())
-	app.Static("/static/", "./static")
+	app.Static("/", "./frontend/dist")
 	routes.AddRoutes(app)
+	app.Get("/_", func(c *fiber.Ctx) error {
+		return c.SendFile("./frontend/dist/index.html")
+	})
 
 	app.Listen("0.0.0.0:6969")
 }
