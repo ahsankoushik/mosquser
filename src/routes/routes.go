@@ -6,4 +6,5 @@ import (
 
 func AddRoutes(app *fiber.App) {
 	addMosqRoutes(app)
+	AddAuthRoutes(app)
 }

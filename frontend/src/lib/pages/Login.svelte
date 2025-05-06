@@ -3,8 +3,7 @@
     import Input from "../components/ui/input/input.svelte";
     import Label from "../components/ui/label/label.svelte";
     import Button from "../components/ui/button/button.svelte";
-    import MosqClient from "../api/client";
-    const host = import.meta.env.VITE_HOST
+    const {mc} = $props();
     let email = $state("")
     let password = $state("")
 
@@ -24,7 +23,6 @@
         <form action=""
             onsubmit={async(e)=>{
                 e.preventDefault();
-                const mc = new MosqClient()
                 const data = await mc.login(email,password);
                 console.log(data)
             }}

@@ -1,6 +1,7 @@
 package models
 
 import (
+	dto_res "github.com/ahsankoushik/mosquser/src/dto"
 	"gorm.io/gorm"
 )
 
@@ -12,3 +13,14 @@ type (
 		SuperUser bool
 	}
 )
+
+func (ar *User) AuthResFromUser(token string) dto_res.AuthRes {
+	return dto_res.AuthRes{
+		ID:        ar.ID,
+		CreatedAt: ar.CreatedAt,
+		UpdatedAt: ar.UpdatedAt,
+		Email:     ar.Email,
+		SuperUser: ar.SuperUser,
+		Token:     token,
+	}
+}

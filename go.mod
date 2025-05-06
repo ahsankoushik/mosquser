@@ -3,8 +3,11 @@ module github.com/ahsankoushik/mosquser
 go 1.23.5
 
 require (
+	github.com/go-playground/validator/v10 v10.26.0
 	github.com/gofiber/fiber/v2 v2.52.6
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	golang.org/x/crypto v0.37.0
+	golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6
 	gorm.io/driver/sqlite v1.5.7
 	gorm.io/gorm v1.26.0
 )
@@ -14,7 +17,6 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.26.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
