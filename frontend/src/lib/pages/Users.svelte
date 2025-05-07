@@ -1,0 +1,112 @@
+<script lang="ts">
+    import type MosqClient from "../api/client.svelte";
+    import Pagination from "../comps/Pagination.svelte";
+    import type { MCRes, MCResCol } from "../api/client.svelte";
+    import Button from "../components/ui/button/button.svelte";
+    import { Plus } from "@lucide/svelte";
+    import { fly, slide } from "svelte/transition";
+
+    const {mc}:{mc:MosqClient} = $props();
+    let loading = $state(true)
+    let data:MCResCol = $state({
+        status:-1,
+        message:"",
+        page:1,
+        perPage:30,
+        totalPages:1,
+        data:{}
+    })
+    const get = async()=>{
+        data = await mc.getItems();
+    }
+    $effect(()=>{
+        const url = new URL(window.location.href);
+        let pageNumber = parseInt(url.searchParams.get("pageNumber") || "1");
+        if(isNaN(pageNumber)) {pageNumber = 0};
+        let perPage = parseInt(url.searchParams.get("perPage") || "30");
+        if(isNaN(perPage)){perPage = 30}
+        mc.pagination.set({
+            page: pageNumber,
+            perPage
+        })
+        get();
+
+        loading = false
+    })
+
+    $inspect(data);
+
+    let showDrawer = $state(false);
+
+    const toggleDrawer = () => {
+        showDrawer = !showDrawer;
+    };
+</script>
+
+<div class="px-3 py-2 h-full flex flex-col justify-between">
+    <div class="my-2 flex justify-between">
+        <div>
+            <h1 class="text-2xl font-bold">Users</h1>
+        </div>
+        <div>
+            <Button onclick={toggleDrawer}>
+                <Plus />New User
+            </Button>
+        </div>
+    </div>
+    <div class="w-full grow overflow-scroll">
+        <table class="table-auto w-full border-collapse border border-gray-300">
+            <thead class="bg-gray-100 sticky top-0 shadow-md">
+                <tr>
+                    <th class="px-4 py-2 border border-gray-300 text-left">Email</th>
+                    <th class="px-4 py-2 border border-gray-300 text-left">Super Users</th>
+                    <th class="px-4 py-2 border border-gray-300 text-left">Created</th>
+                    <th class="px-4 py-2 border border-gray-300 text-left">Updated</th>
+                </tr>
+            </thead>
+            <tbody class="">
+                {#if !loading}
+                    {#each data.data as u, i (u.id)}
+                        <tr class="hover:bg-gray-50 odd:bg-white even:bg-gray-50">
+                            <td class="px-4 py-2 border border-gray-300">{u.email}</td>
+                            <td class="px-4 py-2 border border-gray-300">{u.super_user}</td>
+                            <td class="px-4 py-2 border border-gray-300">{new Date(u.created).toLocaleString()}</td>
+                            <td class="px-4 py-2 border border-gray-300">{new Date(u.updated).toLocaleString()}</td>
+                        </tr>
+                    {/each}
+                {/if}
+            </tbody>
+        </table>
+    </div>
+    <div class="z-1 ">
+        <Pagination {mc} totalPages={data.totalPages} get={get} />
+    </div>
+</div>
+
+{#if showDrawer}
+    <div
+        class="fixed top-0 right-0 h-full w-1/2 min-w-[300px] bg-white shadow-lg transition-transform transform translate-x-0"
+        style="z-index: 1000;"
+        transition:slide={{
+            axis:"x",
+            duration:30
+        }}
+    >
+        <div class="p-4 flex justify-between items-center border-b border-gray-300">
+            <h2 class="text-xl font-bold">New User</h2>
+            <button class="text-gray-500 hover:text-gray-700" onclick={toggleDrawer}>
+                ✕
+            </button>
+        </div>
+        <div class="p-4">
+            <!-- Add your form or content for the drawer here -->
+            <p>Form content goes here...</p>
+        </div>
+    </div>
+    <div
+        class="fixed inset-0 bg-black bg-opacity-50"
+        style="z-index: 999;"
+        onclick={toggleDrawer}
+    ></div>
+{/if}
+

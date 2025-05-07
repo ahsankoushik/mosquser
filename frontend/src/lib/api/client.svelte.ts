@@ -1,11 +1,19 @@
-import { writable, type Readable } from "svelte/store"
+import { writable, type Readable, type Unsubscriber } from "svelte/store"
+import { get } from 'svelte/store';
 
-interface MCRes {
+export interface MCRes {
     status: number,
     message: string,
     data: any
 }
-
+export interface MCResCol{
+    status:number,
+    message:string,
+    page:number,
+    perPage:number,
+    totalPages:number,
+    data:any
+}
 export enum Page{
     Users ="users",
     Acls = "acls",
@@ -25,6 +33,10 @@ class MosqClient{
         message:""
     })
     page = writable<Page>(Page.Users)
+    pagination = writable({
+        page:1,
+        perPage:30,
+    })
     private _token?:string
 
 
@@ -49,15 +61,16 @@ class MosqClient{
         {path,init,params,body}:{
             path:string,
             init?:RequestInit,
-            params?:URLSearchParams,
+            params?:{[key:string]:any},
             body?:{[key:string]:any}
-        }) : Promise<MCRes>
+        }) : Promise<any>
     {
         let url = this.host + path;
         if(params != null){
-            url += "?" + params.toString();
+            url += "?" + new URLSearchParams(params).toString();
         }
         try{
+            console.log(body);
             const res =  await fetch(url,{
                 ...init,
                 headers:this.headers,
@@ -65,9 +78,10 @@ class MosqClient{
                 ...(body && { body: JSON.stringify(body) })
             })
             this.loading = false;
-            const resJson = await res.json() as MCRes;
+            const resJson = await res.json();
             return resJson
         }catch(e){
+            console.log(e)
             this.loading = false;
             const resJson:MCRes = {
                 status:600,
@@ -101,7 +115,7 @@ class MosqClient{
                 email,
                 password
             }
-        })
+        }) as MCRes;
         if(log.status==200){
             this.changePage(Page.Users);
             this.setAuthHeader(log.data.token);
@@ -140,6 +154,19 @@ class MosqClient{
         this.addQueryParam("page",page);
         this.page.set(page);
     }
+    async getItems(){
+        const page = get(this.page)
+        const pagination = get(this.pagination)
+        this.addQueryParam("page",page);
+        this.addQueryParam("pageNumber",pagination.page.toString());
+        this.addQueryParam("perPage",pagination.perPage.toString());
+        const res = await this.hit({
+            path:`/${page}`,
+            params:pagination
+        }) as MCResCol;
+        return res;
+    }
+
 
 }
 

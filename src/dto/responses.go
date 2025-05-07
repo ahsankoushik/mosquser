@@ -18,4 +18,12 @@ type (
 		SuperUser bool      `json:"super_user"`
 		Token     string    `json:"token"`
 	}
+	CollectionsRes struct {
+		Status     int    `json:"status"`
+		Message    string `json:"message"`
+		Page       int    `json:"page"`
+		PerPage    int    `json:"perPage"`
+		TotalPages int    `json:"totalPages"`
+		Data       any    `json:"data"`
+	}
 )

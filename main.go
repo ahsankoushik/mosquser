@@ -27,9 +27,6 @@ func runServer() {
 				code = e.Code
 			}
 
-			// Log the error (optional)
-			log.Printf("Error: %v", err)
-
 			// Send JSON error response
 			return c.Status(code).JSON(dto_res.Response{
 				Status:  code,

@@ -1,16 +1,21 @@
 package models
 
 import (
+	"time"
+
 	dto_res "github.com/ahsankoushik/mosquser/src/dto"
 	"gorm.io/gorm"
 )
 
 type (
 	User struct {
-		gorm.Model
-		Email     string `gorm:"unique,not null,index" validate:"required,email"`
-		Password  string `validate:"required,min=8"`
-		SuperUser bool
+		ID        uint           `gorm:"primarykey" json:"id"`
+		CreatedAt time.Time      `json:"created"`
+		UpdatedAt time.Time      `json:"updated"`
+		DeletedAt gorm.DeletedAt `gorm:"index" json:"-" `
+		Email     string         `gorm:"unique,not null,index" json:"email"`
+		Password  string         `json:"-"`
+		SuperUser bool           `json:"super_user"`
 	}
 )
 

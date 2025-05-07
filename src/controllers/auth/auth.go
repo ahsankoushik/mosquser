@@ -4,6 +4,7 @@ import (
 	"github.com/ahsankoushik/mosquser/src/config"
 	controller "github.com/ahsankoushik/mosquser/src/controllers"
 	dto_res "github.com/ahsankoushik/mosquser/src/dto"
+	dto_req "github.com/ahsankoushik/mosquser/src/dto/request"
 	"github.com/ahsankoushik/mosquser/src/models"
 	"github.com/ahsankoushik/mosquser/src/utils"
 	"github.com/gofiber/fiber/v2"
@@ -39,7 +40,7 @@ func EnsureUserExists(c *fiber.Ctx) error {
 }
 
 func Login(c *fiber.Ctx) error {
-	var userBody models.User
+	var userBody dto_req.User
 	if err := c.BodyParser(&userBody); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Unable to parse data.")
 	}
