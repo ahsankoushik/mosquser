@@ -7,7 +7,6 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.6
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	golang.org/x/crypto v0.37.0
-	golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6
 	gorm.io/driver/sqlite v1.5.7
 	gorm.io/gorm v1.26.0
 )

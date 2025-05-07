@@ -1,5 +1,5 @@
 <script>
-  import MosqClient from "./lib/api/client.svelte";
+  import MosqClient, { Page } from "./lib/api/client.svelte";
     import Loading from "./lib/comps/Loading.svelte";
   import Login from "./lib/pages/Login.svelte";
     import Main from "./lib/pages/Main.svelte";
@@ -11,6 +11,21 @@
       mc.setAuthHeader(t);
       mc.checkAndRefreash();
     }
+    if(mc.loggedin){
+      const url = new URL(window.location.href);
+      const page = url.searchParams.get("page");
+      switch (page){
+        case "messenger":
+          mc.page.set(Page.Messenger)
+          break
+        case "acls":
+          mc.page.set(Page.Acls);
+          break
+        default:
+          mc.page.set(Page.Users);
+          break
+      }
+    }
   })
 
 </script>
@@ -19,7 +34,7 @@
   <Loading/>
 {/if}
 {#if mc.loggedin}
-  <Main/>
+  <Main {mc}/>
 {:else}
   <Login {mc}/>
 {/if}

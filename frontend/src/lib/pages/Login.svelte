@@ -1,11 +1,13 @@
-<script>
+<script lang="ts">
     import { LogIn, ShieldX } from "@lucide/svelte";
     import Input from "../components/ui/input/input.svelte";
     import Label from "../components/ui/label/label.svelte";
     import Button from "../components/ui/button/button.svelte";
-    const {mc} = $props();
+    import type MosqClient from "../api/client.svelte";
+    const {mc}:{mc:MosqClient} = $props();
     let email = $state("")
     let password = $state("")
+    const error = mc.error;
 
 </script>
 
@@ -24,13 +26,12 @@
             onsubmit={async(e)=>{
                 e.preventDefault();
                 const data = await mc.login(email,password);
-                console.log(data)
             }}
         >
             <div class="my-2">
-                <Label>Email</Label>
+                <Label class="{$error.error ? "text-red-600" : ""}">Email</Label>
                 <Input 
-                    class="w-full"
+                    class="w-full {$error.error ? "ring ring-red-600" : ""}"
                     placeholder="Enter your email here"
                     type="email"
                     required
@@ -38,15 +39,19 @@
                 />
             </div>
             <div class="my-2">
-                <Label>Password</Label>
+                <Label class="{$error.error ? "text-red-600" : ""}">Password</Label>
                 <Input 
-                    class="w-full"
+                    class="w-full {$error.error ? "ring ring-red-600" : ""}"
                     placeholder="Enter password here"
                     type="password"
                     required
                     bind:value={password}
                 />
             </div>
+            {#if $error.error}
+                <p class="text-sm text-red-600">{$error.message}</p>
+            {/if}
+
             <Button
                 class="mt-3 w-full gap-2 group"
                 type="submit"
