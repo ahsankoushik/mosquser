@@ -13,7 +13,7 @@ type (
 		CreatedAt time.Time      `json:"created"`
 		UpdatedAt time.Time      `json:"updated"`
 		DeletedAt gorm.DeletedAt `gorm:"index" json:"-" `
-		Email     string         `gorm:"unique,not null,index" json:"email"`
+		Email     string         `gorm:"uniqueIndex;not null" json:"email"`
 		Password  string         `json:"-"`
 		SuperUser bool           `json:"super_user"`
 	}

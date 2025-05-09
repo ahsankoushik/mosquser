@@ -70,7 +70,6 @@ class MosqClient{
             url += "?" + new URLSearchParams(params).toString();
         }
         try{
-            console.log(body);
             const res =  await fetch(url,{
                 ...init,
                 headers:this.headers,
@@ -164,6 +163,20 @@ class MosqClient{
             path:`/${page}`,
             params:pagination
         }) as MCResCol;
+        return res;
+    }
+    async createUser(email:string,password:string, super_user:boolean){
+        const res = await this.hit({
+            path:"/user",
+            init:{
+                method: "POST",
+            },
+            body : {
+                email, 
+                password,
+                super_user
+            }
+        }) as MCRes;
         return res;
     }
 

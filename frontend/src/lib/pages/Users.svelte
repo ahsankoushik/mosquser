@@ -5,6 +5,7 @@
     import Button from "../components/ui/button/button.svelte";
     import { Plus } from "@lucide/svelte";
     import { fly, slide } from "svelte/transition";
+    import UserCreateModal from "../comps/UserCreateModal.svelte";
 
     const {mc}:{mc:MosqClient} = $props();
     let loading = $state(true)
@@ -33,8 +34,6 @@
 
         loading = false
     })
-
-    $inspect(data);
 
     let showDrawer = $state(false);
 
@@ -84,29 +83,6 @@
 </div>
 
 {#if showDrawer}
-    <div
-        class="fixed top-0 right-0 h-full w-1/2 min-w-[300px] bg-white shadow-lg transition-transform transform translate-x-0"
-        style="z-index: 1000;"
-        transition:slide={{
-            axis:"x",
-            duration:30
-        }}
-    >
-        <div class="p-4 flex justify-between items-center border-b border-gray-300">
-            <h2 class="text-xl font-bold">New User</h2>
-            <button class="text-gray-500 hover:text-gray-700" onclick={toggleDrawer}>
-                ✕
-            </button>
-        </div>
-        <div class="p-4">
-            <!-- Add your form or content for the drawer here -->
-            <p>Form content goes here...</p>
-        </div>
-    </div>
-    <div
-        class="fixed inset-0 bg-black bg-opacity-50"
-        style="z-index: 999;"
-        onclick={toggleDrawer}
-    ></div>
+    <UserCreateModal {toggleDrawer} {mc}/>
 {/if}
 
