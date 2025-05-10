@@ -113,3 +113,11 @@ func RandomInt(n int) string {
 	}
 	return otpStr
 }
+
+func FormatDBError(err error) map[string]string {
+	splited := strings.Split(err.Error(), ":")
+	field := strings.Split(splited[1], ".")[1]
+	data := make(map[string]string)
+	data[field] = splited[0]
+	return data
+}

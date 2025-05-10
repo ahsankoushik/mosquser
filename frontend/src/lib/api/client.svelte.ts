@@ -167,7 +167,7 @@ class MosqClient{
     }
     async createUser(email:string,password:string, super_user:boolean){
         const res = await this.hit({
-            path:"/user",
+            path:"/users",
             init:{
                 method: "POST",
             },

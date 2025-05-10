@@ -1,11 +1,10 @@
 <script lang="ts">
     import type MosqClient from "../api/client.svelte";
     import Pagination from "../comps/Pagination.svelte";
-    import type { MCRes, MCResCol } from "../api/client.svelte";
+    import type { MCResCol } from "../api/client.svelte";
     import Button from "../components/ui/button/button.svelte";
     import { Plus } from "@lucide/svelte";
-    import { fly, slide } from "svelte/transition";
-    import UserCreateModal from "../comps/UserCreateModal.svelte";
+    import AclCreateModal from "../comps/AclCreateModal.svelte";
 
     const {mc}:{mc:MosqClient} = $props();
     let loading = $state(true)
@@ -45,11 +44,11 @@
 <div class="px-3 py-2 h-full flex flex-col justify-between">
     <div class="my-2 flex justify-between">
         <div>
-            <h1 class="text-2xl font-bold">Users</h1>
+            <h1 class="text-2xl font-bold">Acls</h1>
         </div>
         <div>
             <Button onclick={toggleDrawer}>
-                <Plus />New User
+                <Plus />New Acl
             </Button>
         </div>
     </div>
@@ -83,6 +82,6 @@
 </div>
 
 {#if showDrawer}
-    <UserCreateModal {toggleDrawer} {mc} {get}/>
+    <AclCreateModal {toggleDrawer} {mc} {get}/>
 {/if}
 

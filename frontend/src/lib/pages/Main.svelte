@@ -4,6 +4,7 @@
     import type MosqClient from "../api/client.svelte";
     import { Page } from "../api/client.svelte";
     import Users from "./Users.svelte";
+    import Acls from "./Acls.svelte";
     const {mc}:{mc:MosqClient} = $props();
     const page = mc.page;
     $effect(()=>{
@@ -93,7 +94,7 @@
     </div>
     <div class="w-[80vw] min-w-[800px] ">
         {#if $page == Page.Acls}
-            acl Page
+            <Acls {mc}/>
         {:else if $page == Page.Messenger}
             Messenger
         {:else}

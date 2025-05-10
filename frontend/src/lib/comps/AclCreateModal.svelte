@@ -10,7 +10,7 @@
     let email = $state("")
     let password = $state("")
     let superUser = $state(false)
-
+    let timeOutId:number;
 </script>
 
 <div
@@ -49,8 +49,24 @@
                     type="email"
                     placeholder="Enter Email address here"
                     required
-                    autocomplete="none"
+                    class="peer"
+                    oninput={(e)=>{
+                        if(timeOutId != undefined){
+                            clearTimeout(timeOutId);
+                        }
+                        timeOutId = setTimeout(()=>{
+                            console.log("call");
+                        },2000)
+                    }}
                 />
+                <ul class="hidden peer-focus:block z-1 mx-2 mt-2">
+                    <li class="px-3 hover:bg-blue-600 hover:text-white">hello</li>
+                    <li class="px-3 hover:bg-blue-600 hover:text-white">hello</li>
+                    <li class="px-3 hover:bg-blue-600 hover:text-white">hello</li>
+                    <li class="px-3 hover:bg-blue-600 hover:text-white">hello</li>
+                    <li class="px-3 hover:bg-blue-600 hover:text-white">hello</li>
+
+                </ul>
             </div>
             <div>
                 <Label for="password">Password:</Label>

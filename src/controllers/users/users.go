@@ -31,7 +31,6 @@ func Get(c *fiber.Ctx) error {
 }
 
 func Create(c *fiber.Ctx) error {
-	utils.Logger(string(c.BodyRaw()))
 	var body dto_req.CreateUser
 	if err := c.BodyParser(&body); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Unable to parse the data")
@@ -44,13 +43,25 @@ func Create(c *fiber.Ctx) error {
 			Data:    data,
 		})
 	}
-	result := DB.Create(&models.User{
+	var user = models.User{
 		Email:     body.Email,
 		Password:  body.Password,
 		SuperUser: body.SuperUser,
-	})
+	}
+	result := DB.Create(&user)
 	if result.Error != nil {
-		utils.Logger(result.Error)
+		return c.Status(fiber.StatusConflict).JSON(dto_res.Response{
+			Status:  fiber.StatusConflict,
+			Message: result.Error.Error(),
+			Data:    utils.FormatDBError(result.Error),
+		})
+	}
+	if result.RowsAffected > 0 {
+		return c.JSON(dto_res.Response{
+			Status:  fiber.StatusOK,
+			Message: "User created",
+			Data:    user,
+		})
 	}
 	return fiber.NewError(fiber.StatusInternalServerError, "Internal Server Error")
 }
