@@ -179,6 +179,16 @@ class MosqClient{
         }) as MCRes;
         return res;
     }
+    async userSearch(email:string){
+        const res = await this.hit({
+            path:"/users/search",
+            params:{
+                limit:5,
+                email
+            }
+        }) as MCRes;
+        return res;
+    }
 
 
 }

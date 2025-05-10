@@ -65,3 +65,20 @@ func Create(c *fiber.Ctx) error {
 	}
 	return fiber.NewError(fiber.StatusInternalServerError, "Internal Server Error")
 }
+
+func Search(c *fiber.Ctx) error {
+	var body dto_req.Search
+	if err := c.QueryParser(&body); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Unable to parse data.")
+	}
+	if body.Limit < 1 {
+		body.Limit = 5
+	}
+	var users []models.User
+	DB.Limit(body.Limit).Where("email LIKE ?", "%"+body.Email+"%").Find(&users)
+	return c.JSON(dto_res.Response{
+		Status:  200,
+		Message: "",
+		Data:    users,
+	})
+}

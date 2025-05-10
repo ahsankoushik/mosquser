@@ -3,6 +3,10 @@ package dto_req
 import "gorm.io/gorm"
 
 type (
+	Search struct {
+		Email string
+		Limit int
+	}
 	Paginator struct {
 		Page    int
 		PerPage int

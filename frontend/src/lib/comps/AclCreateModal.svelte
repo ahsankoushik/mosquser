@@ -4,13 +4,21 @@
     import Label from "../components/ui/label/label.svelte";
     import Checkbox from "../components/ui/checkbox/checkbox.svelte";
     import Button from "../components/ui/button/button.svelte";
-    import { Save } from "@lucide/svelte";
+    import { Save, UserSearch } from "@lucide/svelte";
     import type MosqClient from "../api/client.svelte";
+    import type { MCRes } from "../api/client.svelte";
     const { toggleDrawer,mc, get}:{toggleDrawer:()=>void,mc:MosqClient,get:()=>Promise<void>} =  $props();
     let email = $state("")
-    let password = $state("")
-    let superUser = $state(false)
+    let topic = $state("")
+    let acc = $state(0)
+    let openSerachHelper = $state(false)
+    let userID = -1;
     let timeOutId:number;
+    let searchData:MCRes = $state({
+        status:-1,
+        message:"",
+        data:[]
+    })
 </script>
 
 <div
@@ -32,11 +40,7 @@
         autocomplete="off"
         onsubmit={async(e)=>{
             e.preventDefault();
-            const res = await mc.createUser(email,password,superUser);
-            console.log(res);
-            if(res.status == 200){
-                get();
-            }
+            
         }}
     >
         <div class="p-4 grid grid-cols-1 gap-3">
@@ -49,40 +53,58 @@
                     type="email"
                     placeholder="Enter Email address here"
                     required
-                    class="peer"
                     oninput={(e)=>{
                         if(timeOutId != undefined){
                             clearTimeout(timeOutId);
                         }
-                        timeOutId = setTimeout(()=>{
-                            console.log("call");
-                        },2000)
+                        userID = -1;
+                        timeOutId = setTimeout(async()=>{
+                            searchData = await mc.userSearch(email);
+                        },1000)
+                    }}
+                    on:focusin={()=>{
+                        openSerachHelper = true;
+                    }}
+                    on:focusout={()=>{
+                        setTimeout(()=>{
+                            openSerachHelper = false;
+                        },200)
                     }}
                 />
-                <ul class="hidden peer-focus:block z-1 mx-2 mt-2">
-                    <li class="px-3 hover:bg-blue-600 hover:text-white">hello</li>
-                    <li class="px-3 hover:bg-blue-600 hover:text-white">hello</li>
-                    <li class="px-3 hover:bg-blue-600 hover:text-white">hello</li>
-                    <li class="px-3 hover:bg-blue-600 hover:text-white">hello</li>
-                    <li class="px-3 hover:bg-blue-600 hover:text-white">hello</li>
-
-                </ul>
+                {#if openSerachHelper}
+                    <ul class=" mx-2 mt-2">
+                        {#each searchData.data as user (user.id) }
+                            <!-- svelte-ignore a11y_click_events_have_key_events -->
+                            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+                            <li 
+                                class="px-3 hover:bg-blue-600 hover:text-white cursor-pointer"
+                                onclick={()=>{
+                                    userID = user.id;
+                                    email = user.email;
+                                }}
+                            >{user.email}</li>
+                        {/each}
+                    </ul>
+                {/if}
             </div>
             <div>
-                <Label for="password">Password:</Label>
+                <Label for="topic">Topic:</Label>
                 <Input
-                    bind:value={password}
-                    id="password"
-                    type="password"
-                    placeholder="*************"  
-                    autocomplete="new-password"
+                    bind:value={topic}
+                    id="topic"
+                    type="text"
+                    placeholder="Enter topic name here"  
                 />
             </div>
             <div
-                class="flex gap-x-2 items-center"
             >
-                <Checkbox id="admin" bind:checked={superUser}/>
-                <Label for="admin">Is Admin</Label>
+                <Label for="acc">Acc:</Label>
+                <Input
+                    bind:value={topic}
+                    id="acc"
+                    type="number"
+                    placeholder="Enter Acc value here"  
+                />
             </div>
             <Button
                 type="submit"

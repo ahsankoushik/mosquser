@@ -10,4 +10,5 @@ func AddUsersRoutes(app *fiber.App) {
 	users := app.Group("/users", auth_controller.EnsureUserExists)
 	users.Get("/", users_controller.Get)
 	users.Post("/", users_controller.Create)
+	users.Get("/search", users_controller.Search)
 }
