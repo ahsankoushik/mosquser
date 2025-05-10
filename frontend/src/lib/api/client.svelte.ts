@@ -89,8 +89,6 @@ class MosqClient{
             }
             return resJson
         }
-
-
     }
 
     setAuthHeader(token:string){
@@ -155,6 +153,7 @@ class MosqClient{
     }
     async getItems(){
         const page = get(this.page)
+        console.log(page)
         const pagination = get(this.pagination)
         this.addQueryParam("page",page);
         this.addQueryParam("pageNumber",pagination.page.toString());

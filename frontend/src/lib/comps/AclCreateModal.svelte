@@ -7,6 +7,8 @@
     import { Save, UserSearch } from "@lucide/svelte";
     import type MosqClient from "../api/client.svelte";
     import type { MCRes } from "../api/client.svelte";
+    import * as Select from "../components/ui/select";
+    
     const { toggleDrawer,mc, get}:{toggleDrawer:()=>void,mc:MosqClient,get:()=>Promise<void>} =  $props();
     let email = $state("")
     let topic = $state("")
@@ -19,6 +21,11 @@
         message:"",
         data:[]
     })
+    const Accs = [
+        {label:"Read",value:1},
+        {label:"Write",value:2},
+        {label:"Read & Write",value:3},
+    ]
 </script>
 
 <div
@@ -99,12 +106,21 @@
             <div
             >
                 <Label for="acc">Acc:</Label>
-                <Input
-                    bind:value={topic}
-                    id="acc"
-                    type="number"
-                    placeholder="Enter Acc value here"  
-                />
+                <Select.Root portal={null}>
+                    <Select.Trigger class="w-full">
+                      <Select.Value placeholder="Select Acc Value" />
+                    </Select.Trigger>
+                    <Select.Content>
+                      <Select.Group>
+                        {#each Accs as acc}
+                          <Select.Item value={acc.value} label={acc.label}
+                            >{acc.label}</Select.Item
+                          >
+                        {/each}
+                      </Select.Group>
+                    </Select.Content>
+                    <Select.Input name="favoriteFruit" required/>
+                  </Select.Root>
             </div>
             <Button
                 type="submit"

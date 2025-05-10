@@ -7,21 +7,7 @@
     import Acls from "./Acls.svelte";
     const {mc}:{mc:MosqClient} = $props();
     const page = mc.page;
-    $effect(()=>{
-      const url = new URL(window.location.href);
-      const page = url.searchParams.get("page");
-      switch (page){
-        case "messenger":
-          mc.page.set(Page.Messenger)
-          break
-        case "acls":
-          mc.page.set(Page.Acls);
-          break
-        default:
-          mc.page.set(Page.Users);
-          break
-      }
-    })
+    
 </script>
 
 <div class="w-screen h-screen min-h-[400px] flex">

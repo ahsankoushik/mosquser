@@ -11,6 +11,20 @@
       mc.setAuthHeader(t);
       mc.checkAndRefreash();
     }
+    const url = new URL(window.location.href);
+    const page = url.searchParams.get("page");
+    switch (page){
+      case "messenger":
+        mc.page.set(Page.Messenger)
+        break
+      case "acls":
+        mc.page.set(Page.Acls);
+        break
+      default:
+        mc.page.set(Page.Users);
+        break
+    }
+    
   })
 
 </script>

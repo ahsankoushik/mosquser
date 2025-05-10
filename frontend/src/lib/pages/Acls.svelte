@@ -29,8 +29,6 @@
             page: pageNumber,
             perPage
         })
-        get();
-
         loading = false
     })
 
