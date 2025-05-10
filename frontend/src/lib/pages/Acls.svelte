@@ -29,6 +29,7 @@
             page: pageNumber,
             perPage
         })
+        get();
         loading = false
     })
 
@@ -54,20 +55,22 @@
         <table class="table-auto w-full border-collapse border border-gray-300">
             <thead class="bg-gray-100 sticky top-0 shadow-md">
                 <tr>
-                    <th class="px-4 py-2 border border-gray-300 text-left">Email</th>
-                    <th class="px-4 py-2 border border-gray-300 text-left">Super Users</th>
+                    <th class="px-4 py-2 border border-gray-300 text-left">User</th>
+                    <th class="px-4 py-2 border border-gray-300 text-left">Topic</th>
+                    <th class="px-4 py-2 border border-gray-300 text-left">Acc</th>
                     <th class="px-4 py-2 border border-gray-300 text-left">Created</th>
                     <th class="px-4 py-2 border border-gray-300 text-left">Updated</th>
                 </tr>
             </thead>
             <tbody class="">
                 {#if !loading}
-                    {#each data.data as u, i (u.id)}
+                    {#each data.data as device, i (device.id)}
                         <tr class="hover:bg-gray-50 odd:bg-white even:bg-gray-50">
-                            <td class="px-4 py-2 border border-gray-300">{u.email}</td>
-                            <td class="px-4 py-2 border border-gray-300">{u.super_user}</td>
-                            <td class="px-4 py-2 border border-gray-300">{new Date(u.created).toLocaleString()}</td>
-                            <td class="px-4 py-2 border border-gray-300">{new Date(u.updated).toLocaleString()}</td>
+                            <td class="px-4 py-2 border border-gray-300">{device.user.email}</td>
+                            <td class="px-4 py-2 border border-gray-300">{device.topic}</td>
+                            <td class="px-4 py-2 border border-gray-300">{device.acc == 3 ? "Read & Write" : device.acc == 2 ? "Write" : "Read"}</td>
+                            <td class="px-4 py-2 border border-gray-300">{new Date(device.created).toLocaleString()}</td>
+                            <td class="px-4 py-2 border border-gray-300">{new Date(device.updated).toLocaleString()}</td>
                         </tr>
                     {/each}
                 {/if}

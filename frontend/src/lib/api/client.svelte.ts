@@ -153,7 +153,6 @@ class MosqClient{
     }
     async getItems(){
         const page = get(this.page)
-        console.log(page)
         const pagination = get(this.pagination)
         this.addQueryParam("page",page);
         this.addQueryParam("pageNumber",pagination.page.toString());
@@ -188,7 +187,20 @@ class MosqClient{
         }) as MCRes;
         return res;
     }
-
+    async createAcl(userID:number,topic:string,acc:number){
+        const res = await this.hit({
+            path:"/acls",
+            init:{
+                method: "POST",
+            },
+            body : {
+                userID,
+                topic,
+                acc
+            }
+        }) as MCRes;
+        return res;
+    }
 
 }
 

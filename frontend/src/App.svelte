@@ -24,7 +24,6 @@
         mc.page.set(Page.Users);
         break
     }
-    
   })
 
 </script>

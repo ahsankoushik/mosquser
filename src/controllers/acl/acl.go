@@ -1,4 +1,4 @@
-package users_controller
+package acl_controller
 
 import (
 	"github.com/ahsankoushik/mosquser/src/config"
@@ -16,24 +16,24 @@ var DB *gorm.DB = config.ConnectDB()
 func GetList(c *fiber.Ctx) error {
 	var body dto_req.Paginator
 	c.QueryParser(&body)
-	var users []models.User
-	DB.Scopes(dto_req.Paginate(&body)).Find(&users)
+	var acls []models.Acl
+	DB.Scopes(dto_req.Paginate(&body)).Preload("User").Find(&acls)
 	var count int64
-	DB.Model(models.User{}).Count(&count)
+	DB.Model(models.Acl{}).Count(&count)
 	return c.JSON(dto_res.CollectionsRes{
 		Status:     fiber.StatusOK,
 		Message:    "",
 		Page:       body.Page,
 		PerPage:    body.PerPage,
 		TotalPages: int(count/int64(body.PerPage)) + 1,
-		Data:       users,
+		Data:       acls,
 	})
 }
 
 func Create(c *fiber.Ctx) error {
-	var body dto_req.CreateUser
+	var body models.Acl
 	if err := c.BodyParser(&body); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Unable to parse the data")
+		return fiber.NewError(fiber.StatusBadRequest, "Unable to parse data.")
 	}
 	if err := controller.Validate.Struct(&body); err != nil {
 		msg, data := utils.FormatValidationError(err)
@@ -43,42 +43,24 @@ func Create(c *fiber.Ctx) error {
 			Data:    data,
 		})
 	}
-	var user = models.User{
-		Email:     body.Email,
-		Password:  body.Password,
-		SuperUser: body.SuperUser,
-	}
-	result := DB.Create(&user)
-	if result.Error != nil {
-		return c.Status(fiber.StatusConflict).JSON(dto_res.Response{
-			Status:  fiber.StatusConflict,
-			Message: result.Error.Error(),
-			Data:    utils.FormatDBError(result.Error),
-		})
-	}
+	result := DB.Create(&body)
 	if result.RowsAffected > 0 {
 		return c.JSON(dto_res.Response{
 			Status:  fiber.StatusOK,
-			Message: "User created",
-			Data:    user,
+			Message: "",
+			Data:    body,
 		})
 	}
-	return fiber.NewError(fiber.StatusInternalServerError, "Internal Server Error")
-}
-
-func Search(c *fiber.Ctx) error {
-	var body dto_req.Search
-	if err := c.QueryParser(&body); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Unable to parse data.")
+	if result.Error != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(dto_res.Response{
+			Status:  fiber.StatusInternalServerError,
+			Message: "Internal Server Error",
+			Data:    fiber.Map{},
+		})
 	}
-	if body.Limit < 1 {
-		body.Limit = 5
-	}
-	var users []models.User
-	DB.Limit(body.Limit).Where("email LIKE ?", "%"+body.Email+"%").Find(&users)
-	return c.JSON(dto_res.Response{
-		Status:  200,
-		Message: "",
-		Data:    users,
+	return c.Status(fiber.StatusInternalServerError).JSON(dto_res.Response{
+		Status:  fiber.StatusInternalServerError,
+		Message: "Internal Server Error",
+		Data:    fiber.Map{},
 	})
 }

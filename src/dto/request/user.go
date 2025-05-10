@@ -18,7 +18,7 @@ type (
 	}
 )
 
-func UserPaginate(p *Paginator) func(db *gorm.DB) *gorm.DB {
+func Paginate(p *Paginator) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if p.Page <= 0 {
 			p.Page = 1

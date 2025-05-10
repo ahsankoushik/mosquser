@@ -2,9 +2,8 @@
     import { slide } from "svelte/transition";
     import Input from "../components/ui/input/input.svelte";
     import Label from "../components/ui/label/label.svelte";
-    import Checkbox from "../components/ui/checkbox/checkbox.svelte";
     import Button from "../components/ui/button/button.svelte";
-    import { Save, UserSearch } from "@lucide/svelte";
+    import { Save } from "@lucide/svelte";
     import type MosqClient from "../api/client.svelte";
     import type { MCRes } from "../api/client.svelte";
     import * as Select from "../components/ui/select";
@@ -12,9 +11,11 @@
     const { toggleDrawer,mc, get}:{toggleDrawer:()=>void,mc:MosqClient,get:()=>Promise<void>} =  $props();
     let email = $state("")
     let topic = $state("")
-    let acc = $state(0)
+    let acc = $state({
+        label:"Read",value:1
+    })
     let openSerachHelper = $state(false)
-    let userID = -1;
+    let userID = $state(-1);
     let timeOutId:number;
     let searchData:MCRes = $state({
         status:-1,
@@ -37,7 +38,7 @@
     }}
 >
     <div class="p-4 flex justify-between items-center border-b border-gray-300">
-        <h2 class="text-xl font-bold">New User</h2>
+        <h2 class="text-xl font-bold">New Acl Record</h2>
         <button class="text-gray-500 hover:text-gray-700" onclick={toggleDrawer}>
             ✕
         </button>
@@ -47,7 +48,11 @@
         autocomplete="off"
         onsubmit={async(e)=>{
             e.preventDefault();
-            
+            const data = await mc.createAcl(userID,topic,acc.value);
+            console.log(data);
+            if(data.status == 200){
+                get();
+            }
         }}
     >
         <div class="p-4 grid grid-cols-1 gap-3">
@@ -93,6 +98,9 @@
                         {/each}
                     </ul>
                 {/if}
+                {#if userID == -1}
+                    <p class="font-bold text-xs text-red-600">You Have to select a user.</p>
+                {/if}
             </div>
             <div>
                 <Label for="topic">Topic:</Label>
@@ -106,7 +114,9 @@
             <div
             >
                 <Label for="acc">Acc:</Label>
-                <Select.Root portal={null}>
+                <Select.Root portal={null} 
+                    bind:selected={acc}
+                >
                     <Select.Trigger class="w-full">
                       <Select.Value placeholder="Select Acc Value" />
                     </Select.Trigger>
@@ -119,7 +129,7 @@
                         {/each}
                       </Select.Group>
                     </Select.Content>
-                    <Select.Input name="favoriteFruit" required/>
+                    <Select.Input name="favoriteFruit" required />
                   </Select.Root>
             </div>
             <Button

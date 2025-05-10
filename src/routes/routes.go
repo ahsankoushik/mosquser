@@ -8,4 +8,5 @@ func AddRoutes(app *fiber.App) {
 	addMosqRoutes(app)
 	AddAuthRoutes(app)
 	AddUsersRoutes(app)
+	AddAclRoutes(app)
 }

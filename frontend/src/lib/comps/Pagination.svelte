@@ -1,7 +1,8 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import type MosqClient from "../api/client.svelte";
 
-    const {mc,totalPages = 0,get}:{mc:MosqClient,totalPages:number,get:()=>Promise<void>} = $props();
+    const {mc,totalPages,get}:{mc:MosqClient,totalPages:number,get:()=>Promise<void>} = $props();
     const pagination = mc.pagination;
 
     let pageCount = 5; // pages to view
@@ -42,15 +43,19 @@
 		for(let i = start;i<=stop;i++){
 			arr.push(i);
 		}
+        console.log(arr)
 		return arr;
 	}
-	const listPages = pageListGen();
-    if(!listPages.includes(1)){
+	let listPages = $derived(pageListGen());
+
+    $effect(()=>{
+        if(!listPages.includes(1)){
         firstPage = true
-    }
-    if(!listPages.includes(totalPages)){
-        lastPage = true
-    }
+        }
+        if(!listPages.includes(totalPages)){
+            lastPage = true
+        }
+    })
 </script>
 
 <div class="flex items-center justify-between mt-6">
