@@ -40,8 +40,6 @@ func runServer() {
 		AllowCredentials: true,
 	}))
 
-	config.ConnectDB()
-
 	app.Use(logger.New())
 	app.Static("/", "./frontend/dist")
 	routes.AddRoutes(app)
