@@ -38,6 +38,7 @@
     const toggleDrawer = () => {
         showDrawer = !showDrawer;
     };
+    $inspect(data)
 </script>
 
 <div class="px-3 py-2 h-full flex flex-col justify-between">

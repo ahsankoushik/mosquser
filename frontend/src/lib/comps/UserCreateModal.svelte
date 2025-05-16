@@ -6,11 +6,12 @@
     import Button from "../components/ui/button/button.svelte";
     import { Save } from "@lucide/svelte";
     import type MosqClient from "../api/client.svelte";
+    import type { HTMLFormAttributes } from "svelte/elements";
     const { toggleDrawer,mc, get}:{toggleDrawer:()=>void,mc:MosqClient,get:()=>Promise<void>} =  $props();
     let email = $state("")
     let password = $state("")
     let superUser = $state(false)
-
+    let formElement: HTMLFormElement | undefined;
 </script>
 
 <div
@@ -30,11 +31,15 @@
     <form 
         action=""
         autocomplete="off"
+        bind:this= {formElement}
         onsubmit={async(e)=>{
             e.preventDefault();
             const res = await mc.createUser(email,password,superUser);
             console.log(res);
             if(res.status == 200){
+                if(formElement != undefined){
+                    formElement.reset();
+                }
                 get();
             }
         }}

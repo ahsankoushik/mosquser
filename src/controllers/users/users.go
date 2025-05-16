@@ -43,9 +43,10 @@ func Create(c *fiber.Ctx) error {
 			Data:    data,
 		})
 	}
+	pasword, _ := utils.HashPassword(body.Password)
 	var user = models.User{
 		Email:     body.Email,
-		Password:  body.Password,
+		Password:  pasword,
 		SuperUser: body.SuperUser,
 	}
 	result := DB.Create(&user)
