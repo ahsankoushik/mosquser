@@ -1,10 +1,11 @@
 <script lang="ts">
-    import { AtSign, Database, LogOut } from "@lucide/svelte";
+    import { AtSign, Database, LogOut, Settings } from "@lucide/svelte";
     import Button from "../components/ui/button/button.svelte";
     import type MosqClient from "../api/client.svelte";
     import { Page } from "../api/client.svelte";
     import Users from "./Users.svelte";
     import Acls from "./Acls.svelte";
+    import Messenger from "./Messenger.svelte";
     const {mc}:{mc:MosqClient} = $props();
     const page = mc.page;
     
@@ -34,6 +35,16 @@
                         <AtSign color={"black"}/>
                     </Button>
                 </div>
+                <div class="flex justify-center">
+                    <Button
+                        onclick={()=>{
+                            mc.changePage(Page.Settings)
+                        }}
+                        class="bg-white p-2 hover:bg-gray-200 {$page == Page.Settings ? "ring-2 ring-black" : ""}"
+                    >
+                        <Settings color={"black"}/>
+                    </Button>
+                </div>
             </div>
     
             <div
@@ -53,6 +64,8 @@
         <div class="grid grid-cols-1">
             {#if $page == Page.Messenger}
                 messenger Page
+            {:else if $page == Page.Settings}
+                settings
             {:else}
                 <div class="grid grid-cols-1 p-3 gap-y-3">
                     <div class="">
@@ -82,7 +95,9 @@
         {#if $page == Page.Acls}
             <Acls {mc}/>
         {:else if $page == Page.Messenger}
-            Messenger
+            <Messenger {mc}/>
+        {:else if $page == Page.Settings}
+            settings
         {:else}
             <Users {mc}/>
         {/if}

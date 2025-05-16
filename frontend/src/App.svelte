@@ -20,6 +20,9 @@
       case "acls":
         mc.page.set(Page.Acls);
         break
+      case "settings":
+        mc.page.set(Page.Settings);
+        break
       default:
         mc.page.set(Page.Users);
         break

@@ -18,7 +18,8 @@ export enum Page{
     Users ="users",
     Acls = "acls",
     Messenger = "messenger",
-    Login = "login"
+    Login = "login",
+    Settings = "settings"
 }
 
 
