@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"sync"
+	"time"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -22,10 +23,10 @@ func ConnectDB() *gorm.DB {
 		}
 
 		// Configure connection pool
-		// sqlDB, _ := db.DB()
-		// sqlDB.SetMaxOpenConns(10)           // Maximum number of open connections
-		// sqlDB.SetMaxIdleConns(5)            // Maximum number of idle connections
-		// sqlDB.SetConnMaxLifetime(time.Hour) // Maximum lifetime of a connection
+		sqlDB, _ := DB.DB()
+		sqlDB.SetMaxOpenConns(10)           // Maximum number of open connections
+		sqlDB.SetMaxIdleConns(5)            // Maximum number of idle connections
+		sqlDB.SetConnMaxLifetime(time.Hour) // Maximum lifetime of a connection
 	})
 	return DB
 }

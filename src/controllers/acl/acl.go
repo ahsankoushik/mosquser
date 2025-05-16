@@ -52,10 +52,10 @@ func Create(c *fiber.Ctx) error {
 		})
 	}
 	if result.Error != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(dto_res.Response{
-			Status:  fiber.StatusInternalServerError,
-			Message: "Internal Server Error",
-			Data:    fiber.Map{},
+		return c.Status(fiber.StatusConflict).JSON(dto_res.Response{
+			Status:  fiber.StatusConflict,
+			Message: result.Error.Error(),
+			Data:    utils.FormatDBError(result.Error),
 		})
 	}
 	return c.Status(fiber.StatusInternalServerError).JSON(dto_res.Response{

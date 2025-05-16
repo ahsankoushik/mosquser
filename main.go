@@ -41,11 +41,7 @@ func runServer() {
 	}))
 
 	app.Use(logger.New())
-	app.Static("/", "./frontend/dist")
 	routes.AddRoutes(app)
-	app.Get("/_", func(c *fiber.Ctx) error {
-		return c.SendFile("./frontend/dist/index.html")
-	})
 
 	app.Listen("0.0.0.0:6969")
 }
