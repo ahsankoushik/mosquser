@@ -2,6 +2,8 @@
     import mqtt from "mqtt";
     import { onMount } from "svelte";
     import type MosqClient from "../api/client.svelte";
+    import { Topics } from "../api/stores";
+    import MessengerSidebar from "../comps/MessengerSidebar.svelte";
 
     const { mc }:{mc:MosqClient} = $props();
     let Messages:Array<string> = $state([])
@@ -16,10 +18,11 @@
     clientId: 'mqttjs_' + Math.random().toString(16).substring(2, 10),
     clean: true
     };
+    let client: mqtt.MqttClient;
     onMount(()=>{
         console.log("connecting to mqtt broker.....");
         // Create a new MQTT client instance
-        const client =  mqtt.connect(brokerUrl, clientOptions);
+        client =  mqtt.connect(brokerUrl, clientOptions);
 
         // Define a callback function to handle the connection event
         client.on('connect', function () {
@@ -35,17 +38,14 @@
             console.log(topic,message.toString());
 
         });
-
-        // Subscribe to a topic
-        client.subscribe('#');
-
-        return client;
+    })
+    Topics.subscribe((t)=>{
+        
     })
 </script>
-<div
-    class=""
->
-    <div>
-        
+<div class="flex w-full h-full">
+    <MessengerSidebar {mc}/>
+
+    <div class="w-[70vw] min-w-[400px] border flex-shrink-0">
     </div>
 </div>

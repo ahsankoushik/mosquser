@@ -35,35 +35,36 @@
         topic = "";
     }   
 </script>
-
-<div class="h-screen h-min-[200px] overflow-x-scroll px-2 py-1 gap-y-1 ">
-    <div>
-        <Label for="topic">Topic</Label>
-        <div class="flex gap-1">
-            <Input
-                bind:value={topic}
-                id="topic"
-                onkeydown={(e)=>{
-                    if(e != null){
-                        if(e.key == "Enter"){
-                            handleSave();
+<div class="w-[25vw] min-w-[200px] border flex-shrink-0">
+    <div class="h-screen h-min-[200px] overflow-x-scroll px-2 py-1 gap-y-1 ">
+        <div>
+            <Label for="topic">Topic</Label>
+            <div class="flex gap-1">
+                <Input
+                    bind:value={topic}
+                    id="topic"
+                    onkeydown={(e)=>{
+                        if(e != null){
+                            if(e.key == "Enter"){
+                                handleSave();
+                            }
                         }
-                    }
-                }}
-            />
-            <Button
-                onclick={handleSave}
+                    }}
+                />
+                <Button
+                    onclick={handleSave}
+                >
+                    <Save/>
+                </Button>
+            </div>
+            
+        </div>
+        {#each $Topics as tp,i}
+            <div
+                class="my-1 text-center odd:bg-gray-200 odd:bg-opacity-60 p-2 rounded-lg hover:bg-gray-400 cursor-pointer"
             >
-                <Save/>
-            </Button>
-        </div>
-        
+                {tp}
+            </div>
+        {/each}
     </div>
-    {#each $Topics as tp,i}
-        <div
-            class="my-1 text-center odd:bg-gray-200 odd:bg-opacity-60 p-2 rounded-lg hover:bg-gray-400 cursor-pointer"
-        >
-            {tp}
-        </div>
-    {/each}
 </div>

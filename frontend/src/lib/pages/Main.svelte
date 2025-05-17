@@ -61,38 +61,8 @@
             </div>
         </div>
     </div>
-    <div class="w-[15vw] min-w-[200px] border flex-shrink-0">
-        <div >
-            {#if $page == Page.Messenger}
-                <MessengerSidebar {mc}/>
-            {:else if $page == Page.Settings}
-                settings
-            {:else}
-                <div class="grid grid-cols-1 p-3 gap-y-3">
-                    <div class="">
-                        <h2>Collections</h2>
-                    </div>
-                    <Button 
-                        onclick={()=>{
-                            mc.changePage(Page.Users)
-                        }}
-                        class="bg-white text-black text-center p-2 rounded-md hover:bg-gray-200 {$page == Page.Users ? "ring-2 ring-black" : ""}"
-                    >
-                        <p class="text-lg font-semibold">Users</p>
-                    </Button>
-                    <Button 
-                        onclick={()=>{
-                            mc.changePage(Page.Acls)
-                        }}
-                        class="bg-white text-black text-center p-2 rounded-md hover:bg-gray-200 {$page == Page.Acls ? "ring-2 ring-black" : ""}"
-                    >
-                        <p class="text-lg font-semibold">Acls</p>
-                    </Button>
-                </div>
-            {/if}
-        </div>
-    </div>
-    <div class="w-[80vw] min-w-[800px] ">
+    
+    <div class="w-[95vw] min-w-[800px] ">
         {#if $page == Page.Acls}
             <Acls {mc}/>
         {:else if $page == Page.Messenger}

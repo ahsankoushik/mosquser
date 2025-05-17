@@ -1,13 +1,15 @@
 <script lang="ts">
     import type MosqClient from "../api/client.svelte";
     import Pagination from "../comps/Pagination.svelte";
-    import type { MCRes, MCResCol } from "../api/client.svelte";
+    import { Page, type MCRes, type MCResCol } from "../api/client.svelte";
     import Button from "../components/ui/button/button.svelte";
     import { Plus } from "@lucide/svelte";
     import { fly, slide } from "svelte/transition";
     import UserCreateModal from "../comps/UserCreateModal.svelte";
+    import DbSidebar from "../comps/DBSidebar.svelte";
 
     const {mc}:{mc:MosqClient} = $props();
+    const page = mc.page;
     let loading = $state(true)
     let data:MCResCol = $state({
         status:-1,
@@ -42,45 +44,54 @@
     };
 </script>
 
-<div class="px-3 py-2 h-full flex flex-col justify-between">
-    <div class="my-2 flex justify-between">
-        <div>
-            <h1 class="text-2xl font-bold">Users</h1>
-        </div>
-        <div>
-            <Button onclick={toggleDrawer}>
-                <Plus />New User
-            </Button>
-        </div>
-    </div>
-    <div class="w-full grow overflow-scroll">
-        <table class="table-auto w-full border-collapse border border-gray-300">
-            <thead class="bg-gray-100 sticky top-0 shadow-md">
-                <tr>
-                    <th class="px-4 py-2 border border-gray-300 text-left">Email</th>
-                    <th class="px-4 py-2 border border-gray-300 text-left">Super Users</th>
-                    <th class="px-4 py-2 border border-gray-300 text-left">Created</th>
-                    <th class="px-4 py-2 border border-gray-300 text-left">Updated</th>
-                </tr>
-            </thead>
-            <tbody class="">
-                {#if !loading}
-                    {#each data.data as u, i (u.id)}
-                        <tr class="hover:bg-gray-50 odd:bg-white even:bg-gray-50">
-                            <td class="px-4 py-2 border border-gray-300">{u.email}</td>
-                            <td class="px-4 py-2 border border-gray-300">{u.super_user}</td>
-                            <td class="px-4 py-2 border border-gray-300">{new Date(u.created).toLocaleString()}</td>
-                            <td class="px-4 py-2 border border-gray-300">{new Date(u.updated).toLocaleString()}</td>
+<div class="flex w-full h-full">
+    <DbSidebar {mc}/>
+    <div
+        class="w-[80vw] min-w-[400px] border flex-shrink-0"
+    >
+        <div class="  h-full flex flex-col justify-between">
+            <div class="m-2 flex justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold">Users</h1>
+                </div>
+                <div>
+                    <Button onclick={toggleDrawer}>
+                        <Plus />New User
+                    </Button>
+                </div>
+            </div>
+            <div class="w-full grow overflow-y-scroll p-2">
+                <table class="table-auto w-full border-collapse border border-gray-300">
+                    <thead class="bg-gray-100 sticky top-0 shadow-md">
+                        <tr>
+                            <th class="px-4 py-2 border border-gray-300 text-left">Email</th>
+                            <th class="px-4 py-2 border border-gray-300 text-left">Super Users</th>
+                            <th class="px-4 py-2 border border-gray-300 text-left">Created</th>
+                            <th class="px-4 py-2 border border-gray-300 text-left">Updated</th>
                         </tr>
-                    {/each}
-                {/if}
-            </tbody>
-        </table>
-    </div>
-    <div class="z-1 ">
-        <Pagination {mc} totalPages={data.totalPages} get={get} />
+                    </thead>
+                    <tbody class="">
+                        {#if !loading}
+                            {#each data.data as u, i (u.id)}
+                                <tr class="hover:bg-gray-50 odd:bg-white even:bg-gray-50">
+                                    <td class="px-4 py-2 border border-gray-300">{u.email}</td>
+                                    <td class="px-4 py-2 border border-gray-300">{u.super_user}</td>
+                                    <td class="px-4 py-2 border border-gray-300">{new Date(u.created).toLocaleString()}</td>
+                                    <td class="px-4 py-2 border border-gray-300">{new Date(u.updated).toLocaleString()}</td>
+                                </tr>
+                            {/each}
+                        {/if}
+                    </tbody>
+                </table>
+            </div>
+            <div class="z-1 p-1">
+                <Pagination {mc} totalPages={data.totalPages} get={get} />
+            </div>
+        </div>
     </div>
 </div>
+
+
 
 {#if showDrawer}
     <UserCreateModal {toggleDrawer} {mc} {get}/>
