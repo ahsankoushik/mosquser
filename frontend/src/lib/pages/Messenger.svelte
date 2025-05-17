@@ -4,6 +4,7 @@
     import type MosqClient from "../api/client.svelte";
 
     const { mc }:{mc:MosqClient} = $props();
+    let Messages:Array<string> = $state([])
 
     // Define the MQTT broker URL and port number
     const brokerUrl = 'mqtt://localhost:9001';
@@ -41,3 +42,10 @@
         return client;
     })
 </script>
+<div
+    class=""
+>
+    <div>
+        
+    </div>
+</div>

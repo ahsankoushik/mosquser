@@ -6,6 +6,7 @@
     import Users from "./Users.svelte";
     import Acls from "./Acls.svelte";
     import Messenger from "./Messenger.svelte";
+    import MessengerSidebar from "../comps/MessengerSidebar.svelte";
     const {mc}:{mc:MosqClient} = $props();
     const page = mc.page;
     
@@ -61,9 +62,9 @@
         </div>
     </div>
     <div class="w-[15vw] min-w-[200px] border flex-shrink-0">
-        <div class="grid grid-cols-1">
+        <div >
             {#if $page == Page.Messenger}
-                messenger Page
+                <MessengerSidebar {mc}/>
             {:else if $page == Page.Settings}
                 settings
             {:else}
