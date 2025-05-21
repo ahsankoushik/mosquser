@@ -21,7 +21,9 @@
 
 </script>
 
-
+<svelte:head>
+    <title>Settings | Mosquser</title>
+</svelte:head>
 
 <div class="flex w-full h-full">
     <SettingsSidebar/>
