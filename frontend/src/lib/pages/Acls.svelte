@@ -42,7 +42,9 @@
     };
     $inspect(data)
 </script>
-
+<svelte:head>
+    <title>Acls | Mosquser</title>
+</svelte:head>
 <div class="flex w-full h-full">
     <DbSidebar {mc} />
     <div class="w-[80vw] min-w-[400px] border flex-shrink-0">

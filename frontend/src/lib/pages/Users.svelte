@@ -43,7 +43,9 @@
         showDrawer = !showDrawer;
     };
 </script>
-
+<svelte:head>
+    <title>Users | Mosquser</title>
+</svelte:head>
 <div class="flex w-full h-full">
     <DbSidebar {mc}/>
     <div

@@ -4,9 +4,18 @@
     import type MosqClient from "../api/client.svelte";
     import { Topics } from "../api/stores";
     import MessengerSidebar from "../comps/MessengerSidebar.svelte";
+    import Loading from "../comps/Loading.svelte";
+    import Pagination from "../comps/Pagination.svelte";
+    import Label from "../components/ui/label/label.svelte";
+    import Button from "../components/ui/button/button.svelte";
+    import { Send } from "@lucide/svelte";
 
     const { mc }:{mc:MosqClient} = $props();
-    let Messages:Array<string> = $state([])
+    let mqttConnected = $state(false);
+    let messages:Array<{topic:string, msg:string,sent:boolean}> = $state([])
+    let bottomElement : HTMLDivElement;
+    let sendTopic = $state("");
+    let sendMsg = $state("");
 
     // Define the MQTT broker URL and port number
     const brokerUrl = 'mqtt://localhost:9001';
@@ -26,7 +35,7 @@
 
         // Define a callback function to handle the connection event
         client.on('connect', function () {
-        
+            mqttConnected = true;
         });
 
         client.on("error",(e)=>{
@@ -35,17 +44,94 @@
 
         // Define a callback function to handle the message event
         client.on('message', function (topic, message) {
-            console.log(topic,message.toString());
-
+            // console.log(topic,message.toString());
+            messages.push({
+                topic,
+                msg:message.toString(),
+                sent:false
+            });
         });
     })
-    Topics.subscribe((t)=>{
-        
+    const subscribe = (topic:string)=>{
+        if(client == undefined){
+            return
+        }
+        client.subscribe(topic)
+    }
+    const scrollToBottom = ()=>{
+        if(bottomElement == undefined){
+            return
+        }
+        bottomElement.scrollIntoView({behavior:"smooth"})
+    }
+    $effect(()=>{
+        messages.length;
+        scrollToBottom();
     })
+    
 </script>
+<svelte:head>
+    <title>Messenger | Mosquser</title>
+</svelte:head>
+{#if !mqttConnected}
+    <Loading text="Connecting to Mosquitto."/>
+{/if}
 <div class="flex w-full h-full">
-    <MessengerSidebar {mc}/>
-
-    <div class="w-[70vw] min-w-[400px] border flex-shrink-0">
+    <MessengerSidebar 
+        {mc}
+        {subscribe}
+    />
+    <div class="w-[70vw] min-w-[400px] border  overflow-x-scroll"
+    >
+        {#each messages as msg}
+            <div
+                class="flex m-2 {msg.sent ? "justify-end " : "justify-start "}"
+            >
+                <div
+                    class="p-3 break-all min-w-[100px]  max-w-[50%] rounded-lg {msg.sent ? " bg-green-400" : " bg-gray-200"}"
+                >
+                    <h3><span class="font-semibold mr-2">Topic: </span>{msg.topic}</h3>
+                    <p>{msg.msg}</p>
+                </div>
+            </div>
+        {/each}
+        <div bind:this={bottomElement} class="h-16 "></div>
+        <div class="fixed bottom-0 z-10 w-full border-t flex gap-2 p-1 bg-white w-full overflow-x-scroll">
+            <div class="w-1/6 flex flex-col">
+                <Label for="topic-send">Topic</Label>
+                <input id="topic-send"
+                    bind:value={sendTopic}
+                    placeholder="Enter topic here."
+                    class="w-full border rounded-md p-1 m-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                />
+            </div>
+            <div class="w-[49%] flex flex-col">
+                <textarea
+                    id=""
+                    bind:value={sendMsg}
+                    placeholder="Enter message here."
+                    class="w-full h-full resize-none px-1 border rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                ></textarea>
+            </div>
+            <div class="flex items-end pb-1">
+                <Button
+                    onclick={()=>{
+                        if(sendTopic == "" || sendMsg == ""){
+                            return
+                        }
+                        if(client == undefined){
+                            return
+                        }
+                        client.publish(sendTopic,sendMsg);
+                        messages.push({
+                            topic:sendTopic,
+                            msg:sendMsg,
+                            sent:true
+                        })
+                    }}
+                ><Send/></Button>
+            </div>
+        </div>
     </div>
+    
 </div>

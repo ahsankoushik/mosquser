@@ -1,6 +1,6 @@
-<script>
+<script lang="ts">
     import { ShieldX } from "@lucide/svelte";
-
+    const {text=""}:{text:string} = $props();
 </script>
 
 
@@ -16,6 +16,9 @@
       </div>
       <!-- Spinner -->
       <div class="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"></div>
+      {#if text != ""}
+        {text}
+      {/if}
     </div>
   </div>
   

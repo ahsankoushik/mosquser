@@ -9,28 +9,34 @@
     import { Save } from "@lucide/svelte";
 
     
-    const {mc} : {mc:MosqClient} = $props();
+    const {mc,subscribe} : {mc:MosqClient,subscribe:(topic:string)=>void} = $props();
     let topic = $state("");
 
 
-    onMount(()=>{
-        const topics = localStorage.getItem("mqtt_topics") 
-        if(topics != null){
-            Topics.set(JSON.parse(topics))
-        }
-    })
-    $inspect(Topics)
+    // onMount(()=>{
+    //     const topics = localStorage.getItem("mqtt_topics") 
+    //     if(topics != null){
+    //         Topics.set(JSON.parse(topics))
+    //     }
+    // })
     const handleSave = ()=>{
+        if(topic == ""){
+            return
+        }
+        subscribe(topic);
         Topics.update((t)=>{
-            t.push(topic);
+            t.push({
+                topic,
+                connected:true
+            });
             return t
         });
-        let topics = localStorage.getItem("mqtt_topics");
-        let topicsArr = [];
-        if(topics != null){
-            topicsArr = JSON.parse(topics);
-        }
-        topicsArr.push(topic);
+        // let topics = localStorage.getItem("mqtt_topics");
+        // let topicsArr = [];
+        // if(topics != null){
+        //     topicsArr = JSON.parse(topics);
+        // }
+        // topicsArr.push(topic);
         
         topic = "";
     }   
@@ -63,7 +69,7 @@
             <div
                 class="my-1 text-center odd:bg-gray-200 odd:bg-opacity-60 p-2 rounded-lg hover:bg-gray-400 cursor-pointer"
             >
-                {tp}
+                {tp.topic}
             </div>
         {/each}
     </div>
