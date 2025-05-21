@@ -10,6 +10,6 @@ func Migrate() {
 	db := config.ConnectDB()
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&Acl{})
-
+	db.AutoMigrate(&KeyValueStore{})
 	utils.Logger("Done migration")
 }

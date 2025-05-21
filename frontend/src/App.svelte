@@ -4,7 +4,7 @@
     import Loading from "./lib/comps/Loading.svelte";
   import Login from "./lib/pages/Login.svelte";
     import Main from "./lib/pages/Main.svelte";
-  const mc = new MosqClient();
+  const mc = MosqClient.getInstance();
   onMount(()=>{
     const t = localStorage.getItem("auth_token");
     if(t != null){
@@ -21,8 +21,8 @@
       case "acls":
         mc.page.set(Page.Acls);
         break
-      case "settings":
-        mc.page.set(Page.Settings);
+      case "broker":
+        mc.page.set(Page.Broker);
         break
       default:
         mc.page.set(Page.Users);

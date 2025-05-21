@@ -19,7 +19,8 @@ export enum Page{
     Acls = "acls",
     Messenger = "messenger",
     Login = "login",
-    Settings = "settings"
+    Broker = "broker"
+    
 }
 
 export interface TokenData {
@@ -45,9 +46,17 @@ class MosqClient{
     })
     private _token?:string
 
+    private static instance: MosqClient;
+
+    static getInstance(): MosqClient {
+        if (!MosqClient.instance) {
+            MosqClient.instance = new MosqClient(); // Create if not already
+        }
+        return MosqClient.instance;
+    }
 
 
-    constructor(){
+    private constructor(){
         this.host = import.meta.env.VITE_HOST;
         this.headers = {
             "Content-Type" : "application/json", 

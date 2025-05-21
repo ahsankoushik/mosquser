@@ -13,4 +13,5 @@ func AddRoutes(app *fiber.App) {
 	AddAuthRoutes(app)
 	AddUsersRoutes(app)
 	AddAclRoutes(app)
+	AddKeyValueRoutes(app)
 }
