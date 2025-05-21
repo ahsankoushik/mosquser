@@ -1,10 +1,11 @@
 <script>
+    import { onMount } from "svelte";
   import MosqClient, { Page } from "./lib/api/client.svelte";
     import Loading from "./lib/comps/Loading.svelte";
   import Login from "./lib/pages/Login.svelte";
     import Main from "./lib/pages/Main.svelte";
   const mc = new MosqClient();
-  $effect(()=>{
+  onMount(()=>{
     const t = localStorage.getItem("auth_token");
     if(t != null){
       mc.token = t;
@@ -32,7 +33,7 @@
 </script>
 
 {#if mc.loading}
-  <Loading/>
+  <Loading text={""}/>
 {/if}
 {#if mc.loggedin}
   <Main {mc}/>

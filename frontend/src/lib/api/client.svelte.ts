@@ -22,7 +22,12 @@ export enum Page{
     Settings = "settings"
 }
 
-
+export interface TokenData {
+    exp : number,
+    iat : number,
+    id : number,
+    username : string
+}
 
 class MosqClient{
     host: string
@@ -41,6 +46,7 @@ class MosqClient{
     private _token?:string
 
 
+
     constructor(){
         this.host = import.meta.env.VITE_HOST;
         this.headers = {
@@ -57,6 +63,10 @@ class MosqClient{
     }
     get token():string|undefined{
         return this._token
+    }
+    get tokenData():TokenData{
+
+        return JSON.parse(atob(this._token!.split('.')[1])) as TokenData;
     }
     private async hit(
         {path,init,params,body}:{

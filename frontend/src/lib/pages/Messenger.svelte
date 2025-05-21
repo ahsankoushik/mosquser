@@ -22,8 +22,8 @@
 
     // Define the MQTT client options
     const clientOptions = {
-    username: "ahsankoushik@gmail.com",
-    password: 'koushik123',
+    username: mc.tokenData.username,
+    password: mc.token,
     clientId: 'mqttjs_' + Math.random().toString(16).substring(2, 10),
     clean: true
     };
@@ -81,7 +81,7 @@
         {mc}
         {subscribe}
     />
-    <div class="w-[70vw] min-w-[400px] border  overflow-x-scroll"
+    <div class="w-[70vw] min-w-[400px] border  "
     >
         {#each messages as msg}
             <div
@@ -96,7 +96,7 @@
             </div>
         {/each}
         <div bind:this={bottomElement} class="h-16 "></div>
-        <div class="fixed bottom-0 z-10 w-full border-t flex gap-2 p-1 bg-white w-full overflow-x-scroll">
+        <div class="fixed bottom-0 z-10 w-full border-t flex gap-2 p-1 bg-white w-full ">
             <div class="w-1/6 flex flex-col">
                 <Label for="topic-send">Topic</Label>
                 <input id="topic-send"
@@ -113,7 +113,7 @@
                     class="w-full h-full resize-none px-1 border rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 ></textarea>
             </div>
-            <div class="flex items-end pb-1">
+            <div class="flex items-end ">
                 <Button
                     onclick={()=>{
                         if(sendTopic == "" || sendMsg == ""){

@@ -38,6 +38,10 @@ func Auth(c *fiber.Ctx) error {
 			Data:    data,
 		})
 	}
+	_, err := utils.VerifyToken(user.Password)
+	if err == nil {
+		return c.SendStatus(fiber.StatusOK)
+	}
 	var userdb models.User
 	DB.Where(&models.User{Email: user.Username}).First(&userdb)
 	if utils.VerifyPassword(user.Password, userdb.Password) {

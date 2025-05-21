@@ -42,7 +42,7 @@
     }   
 </script>
 <div class="w-[25vw] min-w-[200px] border flex-shrink-0">
-    <div class="h-screen h-min-[200px] overflow-x-scroll px-2 py-1 gap-y-1 ">
+    <div class=" h-min-[200px] px-2 py-1 gap-y-1 ">
         <div>
             <Label for="topic">Topic</Label>
             <div class="flex gap-1">
