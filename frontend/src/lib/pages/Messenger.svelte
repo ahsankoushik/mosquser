@@ -18,17 +18,31 @@
     let sendMsg = $state("");
 
     // Define the MQTT broker URL and port number
-    const brokerUrl = 'mqtt://localhost:9001';
+
 
     // Define the MQTT client options
     const clientOptions = {
-    username: mc.tokenData.username,
-    password: mc.token,
-    clientId: 'mqttjs_' + Math.random().toString(16).substring(2, 10),
-    clean: true
+        username: mc.tokenData.username,
+        password: mc.token,
+        clientId: 'mqttjs_' + Math.random().toString(16).substring(2, 10),
+        clean: true
     };
-    let client: mqtt.MqttClient;
-    onMount(()=>{
+    let client: mqtt.MqttClient|undefined;
+    onMount(async()=>{
+        setTimeout(() => {
+            mqttConnected = true;
+            client = undefined;
+        }, 5000);
+        const res = await mc.getKeys(["broker_url"]);
+        if(res.data.length == 0 ){
+            return
+        }
+        let brokerUrl = "mqtt://localhost:90081";
+        for(let i = 0; i < res.data.length; i++){
+            if(res.data[i].key = "broker_url"){
+                brokerUrl = res.data[i].value;
+            }
+        }
         console.log("connecting to mqtt broker.....");
         // Create a new MQTT client instance
         client =  mqtt.connect(brokerUrl, clientOptions);
@@ -39,7 +53,7 @@
         });
 
         client.on("error",(e)=>{
-        console.log(e);
+            console.log(e);
         })
 
         // Define a callback function to handle the message event

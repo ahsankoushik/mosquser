@@ -12,7 +12,7 @@ type (
 		CreatedAt time.Time      `json:"created"`
 		UpdatedAt time.Time      `json:"updated"`
 		DeletedAt gorm.DeletedAt `gorm:"index" json:"-" `
-		Key       string         `gorm:"uniqueIndex;not null" json:"key"`
-		Value     string         `json:"string"`
+		Key       string         `gorm:"uniqueIndex;not null" json:"key" validate:"required"`
+		Value     string         `json:"value" validate:"required"`
 	}
 )

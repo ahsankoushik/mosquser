@@ -9,4 +9,5 @@ import (
 func AddKeyValueRoutes(app *fiber.App) {
 	kv := app.Group("/key_value", auth_controller.EnsureUserExists)
 	kv.Get("/", key_value_controller.GetKeys)
+	kv.Post("/", key_value_controller.SetKey)
 }

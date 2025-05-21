@@ -222,6 +222,29 @@ class MosqClient{
         return res;
     }
 
+    async getKeys(keys:Array<string>):Promise<MCRes>{
+        const rest = await this.hit({
+            path : "/key_value",
+            params : {
+                keys:keys
+            }
+        }) as MCRes
+        return rest
+    }
+    async setKey(key:string, value:string):Promise<MCRes>{
+        const res = await this.hit({
+            path:"/key_value",
+            init: {
+                method: "POST",
+            },
+            body : {
+                key,
+                value
+            }
+        }) as MCRes;
+        return res;
+    }
+
 }
 
 
