@@ -97,7 +97,7 @@
         {mc}
         {subscribe}
     />
-    <div class="w-[70vw] min-w-[400px] border  "
+    <div class="w-[70vw] min-w-[400px] border  relative"
     >
         {#each messages as msg}
             <div
@@ -112,8 +112,8 @@
             </div>
         {/each}
         <div bind:this={bottomElement} class="h-16 "></div>
-        <div class="fixed bottom-0 z-10 w-full border-t flex gap-2 p-1 bg-white w-full ">
-            <div class="w-1/6 flex flex-col">
+        <div class="absolute bottom-0 z-10 w-full border-t flex gap-2 p-1 bg-white overflow-x-scroll">
+            <div class="w-[20vw] min-w-[120px]">
                 <Label for="topic-send">Topic</Label>
                 <input id="topic-send"
                     bind:value={sendTopic}
@@ -121,7 +121,7 @@
                     class="w-full border rounded-md p-1 m-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 />
             </div>
-            <div class="w-[49%] flex flex-col">
+            <div class="w-[44vw] min-w-[250px]">
                 <textarea
                     id=""
                     bind:value={sendMsg}
@@ -129,7 +129,7 @@
                     class="w-full h-full resize-none px-1 border rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 ></textarea>
             </div>
-            <div class="flex items-end ">
+            <div class="">
                 <Button
                     onclick={()=>{
                         if(sendTopic == "" || sendMsg == ""){

@@ -62,15 +62,15 @@
         </div>
     </div>
     
-    <div class="w-[95vw] min-w-[800px] ">
-        {#if $page == Page.Acls}
-            <Acls {mc}/>
-        {:else if $page == Page.Messenger}
-            <Messenger {mc}/>
-        {:else if $page == Page.Broker}
-            <Settings/>
-        {:else}
-            <Users {mc}/>
-        {/if}
-    </div>
+    
+    {#if $page == Page.Acls}
+        <Acls {mc}/>
+    {:else if $page == Page.Messenger}
+        <Messenger {mc}/>
+    {:else if $page == Page.Broker}
+        <Settings/>
+    {:else}
+        <Users {mc}/>
+    {/if}
+    
 </div>

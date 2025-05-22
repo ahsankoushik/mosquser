@@ -46,7 +46,6 @@
 <svelte:head>
     <title>Users | Mosquser</title>
 </svelte:head>
-<div class="flex w-full h-full">
     <DbSidebar {mc}/>
     <div
         class="w-[80vw] min-w-[400px] border flex-shrink-0"
@@ -91,7 +90,7 @@
             </div>
         </div>
     </div>
-</div>
+
 
 
 
