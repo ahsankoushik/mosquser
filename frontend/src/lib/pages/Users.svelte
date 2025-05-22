@@ -9,8 +9,10 @@
     import DbSidebar from "../comps/DBSidebar.svelte";
 
     const {mc}:{mc:MosqClient} = $props();
+    let loading = $state(true);
+    let update = $state(-1);
     const page = mc.page;
-    let loading = $state(true)
+
     let data:MCResCol = $state({
         status:-1,
         message:"",
@@ -40,6 +42,7 @@
     let showDrawer = $state(false);
 
     const toggleDrawer = () => {
+        update = -1
         showDrawer = !showDrawer;
     };
 </script>
@@ -74,7 +77,13 @@
                     <tbody class="">
                         {#if !loading}
                             {#each data.data as u, i (u.id)}
-                                <tr class="hover:bg-gray-50 odd:bg-white even:bg-gray-50">
+                                <tr 
+                                    class="hover:bg-gray-50 odd:bg-white even:bg-gray-50 cursor-pointer"
+                                    onclick={()=>{
+                                        showDrawer = true;
+                                        update = i;
+                                    }}
+                                >
                                     <td class="px-4 py-2 border border-gray-300">{u.email}</td>
                                     <td class="px-4 py-2 border border-gray-300">{u.super_user}</td>
                                     <td class="px-4 py-2 border border-gray-300">{new Date(u.created).toLocaleString()}</td>
@@ -95,6 +104,6 @@
 
 
 {#if showDrawer}
-    <UserCreateModal {toggleDrawer} {mc} {get}/>
+    <UserCreateModal {toggleDrawer} {mc} {get} {update} {data} />
 {/if}
 

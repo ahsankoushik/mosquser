@@ -7,11 +7,35 @@
     import { Save } from "@lucide/svelte";
     import type MosqClient from "../api/client.svelte";
     import type { HTMLFormAttributes } from "svelte/elements";
-    const { toggleDrawer,mc, get}:{toggleDrawer:()=>void,mc:MosqClient,get:()=>Promise<void>} =  $props();
+    import type { MCResCol } from "../api/client.svelte";
+    const { 
+        toggleDrawer, 
+        mc, 
+        get,
+        update,
+        data,
+    }:{
+        toggleDrawer:()=>void,
+        mc:MosqClient,
+        get:()=>Promise<void>,
+        update:number,
+        data:MCResCol
+    } =  $props();
     let email = $state("")
     let password = $state("")
     let superUser = $state(false)
     let formElement: HTMLFormElement | undefined;
+    $effect(()=>{
+        if(update>-1){
+            email = data.data[update].email;
+            password = data.data[update].password;
+            superUser = data.data[update].super_user
+        }else{
+            email = "";
+            password = "";
+            superUser = false;
+        }
+    })
 </script>
 
 <div
