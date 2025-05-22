@@ -30,8 +30,10 @@
     let client: mqtt.MqttClient|undefined;
     onMount(async()=>{
         setTimeout(() => {
-            mqttConnected = true;
-            client = undefined;
+            if(!mqttConnected){
+                mqttConnected = true;
+                client = undefined;
+            }
         }, 5000);
         const res = await mc.getKeys(["broker_url"]);
         if(res.data.length == 0 ){
@@ -136,7 +138,7 @@
                         if(client == undefined){
                             return
                         }
-                        client.publish(sendTopic,sendMsg);
+                        console.log(client.publish(sendTopic,sendMsg));
                         messages.push({
                             topic:sendTopic,
                             msg:sendMsg,
