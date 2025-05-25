@@ -8,25 +8,47 @@
     import type { MCRes } from "../api/client.svelte";
     import * as Select from "../components/ui/select";
     
-    const { toggleDrawer,mc, get}:{toggleDrawer:()=>void,mc:MosqClient,get:()=>Promise<void>} =  $props();
-    let email = $state("")
-    let topic = $state("")
-    let acc = $state({
-        label:"Read",value:1
-    })
-    let openSerachHelper = $state(false)
-    let userID = $state(-1);
-    let timeOutId:number;
-    let searchData:MCRes = $state({
-        status:-1,
-        message:"",
-        data:[]
-    })
+    const { toggleDrawer,
+            mc, 
+            get,
+            update, 
+            data
+        }:{
+            toggleDrawer:()=>void,
+            mc:MosqClient,
+            get:()=>Promise<void>,
+            update:number,
+            data:MCRes} =  $props();
     const Accs = [
         {label:"Read",value:1},
         {label:"Write",value:2},
         {label:"Read & Write",value:3},
     ]
+    let email = $state("")
+    let topic = $state("")
+    let acc = $state(Accs[0])
+    let openSerachHelper = $state(false)
+    let userID = $state(-1);
+    let timeOutId:NodeJS.Timeout;
+    let searchData:MCRes = $state({
+        status:-1,
+        message:"",
+        data:[]
+    })
+
+    $effect(()=>{
+        if(update>-1){
+            email = data.data[update].user.email;
+            topic = data.data[update].topic;
+            acc = Accs.filter((a)=>a.value == data.data[update].acc)[0];
+            userID = data.data[update].user.id
+        }else{
+            email = "";
+            topic = "";
+            acc = Accs[0];
+            userID = -1;
+        }
+    })
 </script>
 
 <div

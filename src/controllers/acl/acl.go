@@ -64,3 +64,8 @@ func Create(c *fiber.Ctx) error {
 		Data:    fiber.Map{},
 	})
 }
+
+func Update(c *fiber.Ctx) error {
+
+	return nil
+}

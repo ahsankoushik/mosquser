@@ -10,4 +10,5 @@ func AddAclRoutes(app *fiber.App) {
 	acl := app.Group("/acls", auth_controller.EnsureUserExists)
 	acl.Get("/", acl_controller.GetList)
 	acl.Post("/", acl_controller.Create)
+	acl.Put("/", acl_controller.Update)
 }

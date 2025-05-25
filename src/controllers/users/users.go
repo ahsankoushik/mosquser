@@ -76,10 +76,35 @@ func Search(c *fiber.Ctx) error {
 		body.Limit = 5
 	}
 	var users []models.User
-	DB.Limit(body.Limit).Where("email LIKE ?", "%"+body.Email+"%").Find(&users)
+	DB.Limit(body.Limit).Where("super_user = 0 and email LIKE ?", "%"+body.Email+"%").Find(&users)
 	return c.JSON(dto_res.Response{
 		Status:  200,
 		Message: "",
 		Data:    users,
 	})
+}
+
+func Update(c *fiber.Ctx) error {
+	var body dto_req.CreateUser
+	if err := c.BodyParser(&body); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Unable to parse data.")
+	}
+	if err := controller.Validate.Struct(&body); err != nil {
+		msg, data := utils.FormatValidationError(err)
+		return c.Status(fiber.StatusBadRequest).JSON(dto_res.Response{
+			Status:  fiber.StatusBadRequest,
+			Message: msg,
+			Data:    data,
+		})
+	}
+	result := DB.Save(&body)
+	if result.RowsAffected < 1 {
+		return c.JSON(result.Error)
+	} else {
+		return c.JSON(dto_res.Response{
+			Status:  fiber.StatusOK,
+			Message: "",
+			Data:    body,
+		})
+	}
 }

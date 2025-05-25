@@ -9,7 +9,9 @@
 
     const {mc}:{mc:MosqClient} = $props();
     const page = mc.page;
-    let loading = $state(true)
+    let loading = $state(true);
+    let showDrawer = $state(false);
+    let update = $state(-1);
     let data:MCResCol = $state({
         status:-1,
         message:"",
@@ -35,9 +37,9 @@
         loading = false
     })
 
-    let showDrawer = $state(false);
 
-    const toggleDrawer = () => {
+    const toggleDrawer = () => { 
+        update = -1;
         showDrawer = !showDrawer;
     };
     $inspect(data)
@@ -73,7 +75,12 @@
                     <tbody class="">
                         {#if !loading}
                             {#each data.data as device, i (device.id)}
-                                <tr class="hover:bg-gray-50 odd:bg-white even:bg-gray-50">
+                                <tr class="hover:bg-gray-50 odd:bg-white even:bg-gray-50"
+                                    onclick={()=>{
+                                        update = i;
+                                        showDrawer = true;
+                                    }}
+                                >
                                     <td class="px-4 py-2 border border-gray-300">{device.user.email}</td>
                                     <td class="px-4 py-2 border border-gray-300">{device.topic}</td>
                                     <td class="px-4 py-2 border border-gray-300">{device.acc == 3 ? "Read & Write" : device.acc == 2 ? "Write" : "Read"}</td>
@@ -94,6 +101,6 @@
 
 
 {#if showDrawer}
-    <AclCreateModal {toggleDrawer} {mc} {get}/>
+    <AclCreateModal {toggleDrawer} {mc} {get} {update} {data}/>
 {/if}
 

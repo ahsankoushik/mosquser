@@ -58,14 +58,24 @@
         bind:this= {formElement}
         onsubmit={async(e)=>{
             e.preventDefault();
-            const res = await mc.createUser(email,password,superUser);
-            console.log(res);
-            if(res.status == 200){
-                if(formElement != undefined){
-                    formElement.reset();
+            if(update == -1){
+                const res = await mc.createUser(email,password,superUser);
+                if(res.status == 200){
+                    if(formElement != undefined){
+                        formElement.reset();
+                    }
+                    get();
                 }
-                get();
+            }else{
+                const res = await mc.updateUser(email,password,superUser);
+                if(res.status == 200){
+                    if(formElement != undefined){
+                        formElement.reset();
+                    }
+                    get();
+                }
             }
+
         }}
     >
         <div class="p-4 grid grid-cols-1 gap-3">
@@ -78,7 +88,7 @@
                     type="email"
                     placeholder="Enter Email address here"
                     required
-                    autocomplete="none"
+                    autocomplete="off"
                 />
             </div>
             <div>

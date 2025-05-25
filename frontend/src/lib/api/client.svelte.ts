@@ -197,6 +197,20 @@ class MosqClient{
         }) as MCRes;
         return res;
     }
+    async updateUser(email:string,password:string, super_user:boolean){
+        const res = await this.hit({
+            path:"/users",
+            init:{
+                method: "PUT",
+            },
+            body : {
+                email, 
+                password,
+                super_user
+            }
+        }) as MCRes;
+        return res;
+    }
     async userSearch(email:string){
         const res = await this.hit({
             path:"/users/search",
@@ -212,6 +226,20 @@ class MosqClient{
             path:"/acls",
             init:{
                 method: "POST",
+            },
+            body : {
+                userID,
+                topic,
+                acc
+            }
+        }) as MCRes;
+        return res;
+    }
+    async updateAcl(userID:number,topic:string,acc:number){
+        const res = await this.hit({
+            path:"/acls",
+            init:{
+                method: "PUT",
             },
             body : {
                 userID,
