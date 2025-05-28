@@ -32,17 +32,7 @@ func GetList(c *fiber.Ctx) error {
 
 func Create(c *fiber.Ctx) error {
 	var body dto_req.CreateUser
-	if err := c.BodyParser(&body); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Unable to parse the data")
-	}
-	if err := controller.Validate.Struct(&body); err != nil {
-		msg, data := utils.FormatValidationError(err)
-		return c.Status(fiber.StatusBadRequest).JSON(dto_res.Response{
-			Status:  fiber.StatusBadRequest,
-			Message: msg,
-			Data:    data,
-		})
-	}
+
 	pasword, _ := utils.HashPassword(body.Password)
 	var user = models.User{
 		Email:     body.Email,
@@ -91,20 +81,72 @@ func Update(c *fiber.Ctx) error {
 	}
 	if err := controller.Validate.Struct(&body); err != nil {
 		msg, data := utils.FormatValidationError(err)
+		_, ok := data["password"]
+		if !ok {
+			return c.Status(fiber.StatusBadRequest).JSON(dto_res.Response{
+				Status:  fiber.StatusBadRequest,
+				Message: msg,
+				Data:    data,
+			})
+		}
+	}
+	var userDB models.User
+	DB.Where("email = ?", body.Email).First(&userDB)
+	if userDB.ID < 1 {
+		return fiber.NewError(fiber.StatusNotFound, "Unable to find the user")
+	} else {
+		if body.Password == "" {
+			password, _ := utils.HashPassword(body.Password)
+			userDB.Password = password
+		}
+		userDB.SuperUser = body.SuperUser
+		userDB.Email = body.Email
+		result := DB.Updates(&userDB)
+		if result.Error != nil {
+			data := utils.FormatDBError(result.Error)
+			return c.Status(fiber.StatusConflict).JSON(dto_res.Response{
+				Status:  fiber.StatusConflict,
+				Message: result.Error.Error(),
+				Data:    data,
+			})
+		} else {
+			return c.JSON(dto_res.Response{
+				Status:  fiber.StatusOK,
+				Message: "",
+				Data:    userDB,
+			})
+		}
+	}
+}
+
+func DeleteUser(c *fiber.Ctx) error {
+	var body dto_req.DeleteUser
+	if err := c.BodyParser(&body); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Unable to Parse data.")
+	}
+	if err := controller.Validate.Struct(&body); err != nil {
+		msg, data := utils.FormatValidationError(err)
 		return c.Status(fiber.StatusBadRequest).JSON(dto_res.Response{
 			Status:  fiber.StatusBadRequest,
 			Message: msg,
 			Data:    data,
 		})
 	}
-	result := DB.Save(&body)
-	if result.RowsAffected < 1 {
-		return c.JSON(result.Error)
+	result := DB.Delete(&models.User{ID: body.Id})
+	if result.Error != nil {
+		utils.Logger(result.Error.Error())
+		data := utils.FormatDBError(result.Error)
+		return c.Status(fiber.StatusConflict).JSON(dto_res.Response{
+			Status:  fiber.StatusConflict,
+			Message: result.Error.Error(),
+			Data:    data,
+		})
 	} else {
-		return c.JSON(dto_res.Response{
-			Status:  fiber.StatusOK,
-			Message: "",
-			Data:    body,
+		return c.Status(fiber.StatusNoContent).JSON(dto_res.Response{
+			Status:  fiber.StatusNoContent,
+			Message: "Deleted",
+			Data:    fiber.Map{},
 		})
 	}
+
 }

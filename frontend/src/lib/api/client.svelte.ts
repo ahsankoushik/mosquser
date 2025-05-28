@@ -197,7 +197,7 @@ class MosqClient{
         }) as MCRes;
         return res;
     }
-    async updateUser(email:string,password:string, super_user:boolean){
+    async updateUser(email:string,password:string="-", super_user:boolean){
         const res = await this.hit({
             path:"/users",
             init:{
@@ -210,6 +210,18 @@ class MosqClient{
             }
         }) as MCRes;
         return res;
+    }
+    async deleteUser(id:number){
+        const res = await this.hit({
+            path:"/users",
+            init:{
+                method:"DELETE"
+            },
+            body:{
+                id
+            }
+        }) as MCRes;
+        return res
     }
     async userSearch(email:string){
         const res = await this.hit({

@@ -14,7 +14,7 @@ type (
 		DeletedAt gorm.DeletedAt `gorm:"index" json:"-" `
 		Acc       int8           `json:"acc" validate:"required"`
 		UserID    uint           `json:"userID" validate:"required" gorm:"index:idx_user_topic,unique"`
-		Topic     string         `json:"topic" validate:"required" gorm:"index:idx_user_topic,unique"`
+		Topic     string         `json:"topic" validate:"required" gorm:"index:idx_user_topic,unique constraint:OnDelete:CASCADE"`
 		User      User           `gorm:"foreignKey:UserID" json:"user"`
 	}
 )

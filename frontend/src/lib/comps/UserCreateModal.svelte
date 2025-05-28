@@ -4,7 +4,7 @@
     import Label from "../components/ui/label/label.svelte";
     import Checkbox from "../components/ui/checkbox/checkbox.svelte";
     import Button from "../components/ui/button/button.svelte";
-    import { Save } from "@lucide/svelte";
+    import { Save, Trash2 } from "@lucide/svelte";
     import type MosqClient from "../api/client.svelte";
     import type { HTMLFormAttributes } from "svelte/elements";
     import type { MCResCol } from "../api/client.svelte";
@@ -75,7 +75,6 @@
                     get();
                 }
             }
-
         }}
     >
         <div class="p-4 grid grid-cols-1 gap-3">
@@ -107,12 +106,32 @@
                 <Checkbox id="admin" bind:checked={superUser}/>
                 <Label for="admin">Is Admin</Label>
             </div>
-            <Button
-                type="submit"
-            >
-                <Save class="mr-2"/>
-                Save
-            </Button>
+            <div class="flex gap-2">
+                <Button
+                    class="flex-grow"
+                    type="submit"
+                >
+                    <Save class="mr-2"/>
+                    Save
+                </Button>
+                {#if update > -1}
+                    <Button
+                        class="bg-red-600 flex-grow"
+                        onclick={async()=>{
+                            const res = await mc.deleteUser(data.data[update].id);
+                            if(res.status == 204){
+                                get()
+                                toggleDrawer();
+                            }else{
+                                // TODO :: show modal
+                            }
+                        }}
+                    >
+                        <Trash2 class="mr-2"/>
+                        Delete
+                    </Button>
+                {/if}
+            </div>
         </div>
     </form>
 </div>
