@@ -12,7 +12,6 @@ type (
 		ID        uint           `gorm:"primarykey" json:"id"`
 		CreatedAt time.Time      `json:"created"`
 		UpdatedAt time.Time      `json:"updated"`
-		DeletedAt gorm.DeletedAt `gorm:"index" json:"-" `
 		Email     string         `gorm:"uniqueIndex;not null" json:"email"`
 		Password  string         `json:"-"`
 		SuperUser bool           `json:"super_user"`
@@ -28,4 +27,9 @@ func (ar *User) AuthResFromUser(token string) dto_res.AuthRes {
 		SuperUser: ar.SuperUser,
 		Token:     token,
 	}
+}
+
+func (u *User) AfterDelete(tx *gorm.DB) (err error){
+	tx.Where("user_id = ?",u.ID).Delete(&Acl{})
+	return 
 }

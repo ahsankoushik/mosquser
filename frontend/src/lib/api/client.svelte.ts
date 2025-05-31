@@ -284,8 +284,6 @@ class MosqClient{
         }) as MCRes;
         return res;
     }
-
 }
-
 
 export default MosqClient;

@@ -33,6 +33,15 @@ func GetList(c *fiber.Ctx) error {
 func Create(c *fiber.Ctx) error {
 	var body dto_req.CreateUser
 
+	if err := c.BodyParser(&body); err != nil{
+		return c.Status(fiber.StatusBadRequest).JSON(
+			dto_res.Response{
+				Status:fiber.StatusBadRequest,
+				Message: "Unable to parse data",
+				Data: fiber.Map{},
+			},
+		)
+	}
 	pasword, _ := utils.HashPassword(body.Password)
 	var user = models.User{
 		Email:     body.Email,
@@ -142,11 +151,11 @@ func DeleteUser(c *fiber.Ctx) error {
 			Data:    data,
 		})
 	} else {
-		return c.Status(fiber.StatusNoContent).JSON(dto_res.Response{
-			Status:  fiber.StatusNoContent,
+		return c.JSON(dto_res.Response{
+			Status:  fiber.StatusOK,
 			Message: "Deleted",
 			Data:    fiber.Map{},
 		})
 	}
 
-}
+} 

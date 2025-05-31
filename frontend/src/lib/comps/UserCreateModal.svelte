@@ -119,7 +119,7 @@
                         class="bg-red-600 flex-grow"
                         onclick={async()=>{
                             const res = await mc.deleteUser(data.data[update].id);
-                            if(res.status == 204){
+                            if(res.status == 200){
                                 get()
                                 toggleDrawer();
                             }else{
