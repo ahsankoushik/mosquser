@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@lucide/svelte": "^0.507.0",
-    "mqtt": "^5.13.0"
+    "mqtt": "^5.13.0",
+    "svelte-5-french-toast": "^2.0.4"
   }
 }

@@ -247,14 +247,14 @@ class MosqClient{
         }) as MCRes;
         return res;
     }
-    async updateAcl(ID:number,topic:string,acc:number){
+    async updateAcl(id:number,topic:string,acc:number){
         const res = await this.hit({
             path:"/acls",
             init:{
                 method: "PUT",
             },
             body : {
-                ID,
+                id,
                 topic,
                 acc
             }

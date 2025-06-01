@@ -7,6 +7,7 @@
     import  MosqClient from "../api/client.svelte";
     import type { MCRes } from "../api/client.svelte";
     import * as Select from "../components/ui/select";
+    import toast from "svelte-5-french-toast";
     
     const { toggleDrawer,
             mc, 
@@ -29,6 +30,7 @@
     let acc = $state(Accs[0])
     let openSerachHelper = $state(false)
     let userID = $state(-1);
+    let id = $state(-1);
     let timeOutId:NodeJS.Timeout;
     let searchData:MCRes = $state({
         status:-1,
@@ -41,17 +43,19 @@
             email = data.data[update].user.email;
             topic = data.data[update].topic;
             acc = Accs.filter((a)=>a.value == data.data[update].acc)[0];
-            userID = data.data[update].user.id
+            userID = data.data[update].user.id;
+            id = data.data[update].id;
         }else{
             email = "";
             topic = "";
             acc = Accs[0];
             userID = -1;
+            id = -1;
         }
     })
     const handleDelete = async()=>{
         console.log("ok")
-        const res = await mc.deleteAcl(data.data[update].id);
+        const res = await mc.deleteAcl(id);
         if(res.status == 200){
             get(); 
             toggleDrawer();
@@ -83,12 +87,17 @@
                 console.log(data);
                 if(data.status == 200){
                     get();
+                    toast.success("Added");
+                }else if(data.status == 409){
+                    toast.error(data.message);
                 }
             }else{
-                const data = await mc.updateAcl(data.data[update].id,topic,acc.value);
+                const data = await mc.updateAcl(id,topic,acc.value);
                 if(data.status == 200){
                     toggleDrawer();
                     get();
+                }else if(data.status == 409){
+                    toast.error(data.message);
                 }
             }
         }}

@@ -58,12 +58,29 @@ func Create(c *fiber.Ctx) error {
 }
 
 func Update(c *fiber.Ctx) error {
-	var body dto_req.CreateUser
+	var body dto_req.AclUpdate
 	if err := controller.BodyParse(&body,c); err != nil{
 		return err
 	}
-	utils.Logger(body)
-	return c.SendStatus(200)
+	var acl models.Acl
+	DB.Where("id = ?", body.ID).First(&acl)
+	acl.Topic = body.Topic
+	acl.Acc = int8(body.Acc)
+	resutlt := DB.Save(&acl)
+	if resutlt.Error != nil{
+		data := utils.FormatDBError(resutlt.Error)
+		return c.Status(fiber.StatusConflict).JSON(dto_res.Response{
+			Status: fiber.StatusConflict,
+			Message: resutlt.Error.Error(),
+			Data: data,
+		})
+	}else{
+		return c.JSON(dto_res.Response{
+			Status: fiber.StatusOK,
+			Message: "",
+			Data: fiber.Map{},
+		})
+	}
 }
 
 func Delete(c *fiber.Ctx) error {

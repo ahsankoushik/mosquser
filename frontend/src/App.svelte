@@ -4,6 +4,7 @@
     import Loading from "./lib/comps/Loading.svelte";
   import Login from "./lib/pages/Login.svelte";
     import Main from "./lib/pages/Main.svelte";
+    import  {Toaster} from 'svelte-5-french-toast'
   const mc = MosqClient.getInstance();
   onMount(()=>{
     const t = localStorage.getItem("auth_token");
@@ -29,7 +30,6 @@
         break
     }
   })
-
 </script>
 
 {#if mc.loading}
@@ -41,4 +41,4 @@
   <Login {mc}/>
 {/if}
 
-
+<Toaster/>
