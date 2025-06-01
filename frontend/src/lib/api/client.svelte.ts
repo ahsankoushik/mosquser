@@ -247,21 +247,32 @@ class MosqClient{
         }) as MCRes;
         return res;
     }
-    async updateAcl(userID:number,topic:string,acc:number){
+    async updateAcl(ID:number,topic:string,acc:number){
         const res = await this.hit({
             path:"/acls",
             init:{
                 method: "PUT",
             },
             body : {
-                userID,
+                ID,
                 topic,
                 acc
             }
         }) as MCRes;
         return res;
     }
-
+    async deleteAcl(id:number):Promise<MCRes> {
+       console.log(id);
+       const res = await this.hit({
+            path: "/acls",
+            init: {
+                method: "DELETE"
+            },
+            body: {id}
+       }) as MCRes;
+       return res;
+    }
+    
     async getKeys(keys:Array<string>):Promise<MCRes>{
         const rest = await this.hit({
             path : "/key_value",

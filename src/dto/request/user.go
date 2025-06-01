@@ -16,9 +16,6 @@ type (
 		Password  string `json:"password" validate:"required,min=8" `
 		SuperUser bool   `json:"super_user"`
 	}
-	DeleteUser struct {
-		Id uint `json:"id" validate:"required"`
-	}
 )
 
 func Paginate(p *Paginator) func(db *gorm.DB) *gorm.DB {

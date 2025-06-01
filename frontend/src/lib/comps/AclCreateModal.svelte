@@ -3,8 +3,8 @@
     import Input from "../components/ui/input/input.svelte";
     import Label from "../components/ui/label/label.svelte";
     import Button from "../components/ui/button/button.svelte";
-    import { Save } from "@lucide/svelte";
-    import type MosqClient from "../api/client.svelte";
+    import { Save, Trash2 } from "@lucide/svelte";
+    import  MosqClient from "../api/client.svelte";
     import type { MCRes } from "../api/client.svelte";
     import * as Select from "../components/ui/select";
     
@@ -49,6 +49,14 @@
             userID = -1;
         }
     })
+    const handleDelete = async()=>{
+        console.log("ok")
+        const res = await mc.deleteAcl(data.data[update].id);
+        if(res.status == 200){
+            get(); 
+            toggleDrawer();
+        }
+    }
 </script>
 
 <div
@@ -70,10 +78,18 @@
         autocomplete="off"
         onsubmit={async(e)=>{
             e.preventDefault();
-            const data = await mc.createAcl(userID,topic,acc.value);
-            console.log(data);
-            if(data.status == 200){
-                get();
+            if(update == -1){
+                const data = await mc.createAcl(userID,topic,acc.value);
+                console.log(data);
+                if(data.status == 200){
+                    get();
+                }
+            }else{
+                const data = await mc.updateAcl(data.data[update].id,topic,acc.value);
+                if(data.status == 200){
+                    toggleDrawer();
+                    get();
+                }
             }
         }}
     >
@@ -154,12 +170,28 @@
                     <Select.Input name="favoriteFruit" required />
                   </Select.Root>
             </div>
+            <div
+                class="flex gap-2"
+            >
             <Button
+                class="flex-1"
                 type="submit"
             >
                 <Save class="mr-2"/>
                 Save
             </Button>
+            {#if update != -1 }
+                <Button
+                    class="flex-1 bg-red-600"
+                    onclick={handleDelete}
+                >
+                    <Trash2/>
+                    Delete 
+                </Button>
+                
+            {/if}
+                
+            </div>
         </div>
     </form>
 </div>

@@ -32,17 +32,9 @@ func GetList(c *fiber.Ctx) error {
 
 func Create(c *fiber.Ctx) error {
 	var body models.Acl
-	if err := c.BodyParser(&body); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Unable to parse data.")
-	}
-	if err := controller.Validate.Struct(&body); err != nil {
-		msg, data := utils.FormatValidationError(err)
-		return c.Status(fiber.StatusBadRequest).JSON(dto_res.Response{
-			Status:  fiber.StatusBadRequest,
-			Message: msg,
-			Data:    data,
-		})
-	}
+	if err := controller.BodyParse(&body,c); err != nil{
+		return err
+	}	
 	result := DB.Create(&body)
 	if result.RowsAffected > 0 {
 		return c.JSON(dto_res.Response{
@@ -66,6 +58,32 @@ func Create(c *fiber.Ctx) error {
 }
 
 func Update(c *fiber.Ctx) error {
+	var body dto_req.CreateUser
+	if err := controller.BodyParse(&body,c); err != nil{
+		return err
+	}
+	utils.Logger(body)
+	return c.SendStatus(200)
+}
 
-	return nil
+func Delete(c *fiber.Ctx) error {
+	var body dto_req.Delete
+	if err := controller.BodyParse(&body,c); err != nil{
+		return err
+	}
+	result := DB.Delete(&models.Acl{ID: body.ID})
+	if result.Error != nil{
+		data := utils.FormatDBError(result.Error)
+		return c.Status(fiber.StatusConflict).JSON(dto_res.Response{
+			Status:fiber.StatusConflict,
+			Message: "",
+			Data: data,
+		})
+	}else{
+		return c.JSON(dto_res.Response{
+			Status: fiber.StatusOK,
+			Message: "Deleted",
+			Data: fiber.Map{},
+		})
+	}
 }

@@ -11,4 +11,6 @@ func AddAclRoutes(app *fiber.App) {
 	acl.Get("/", acl_controller.GetList)
 	acl.Post("/", acl_controller.Create)
 	acl.Put("/", acl_controller.Update)
+	acl.Delete("/", acl_controller.Delete)
 }
+

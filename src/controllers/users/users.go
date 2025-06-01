@@ -129,7 +129,7 @@ func Update(c *fiber.Ctx) error {
 }
 
 func DeleteUser(c *fiber.Ctx) error {
-	var body dto_req.DeleteUser
+	var body dto_req.Delete
 	if err := c.BodyParser(&body); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Unable to Parse data.")
 	}
@@ -141,7 +141,7 @@ func DeleteUser(c *fiber.Ctx) error {
 			Data:    data,
 		})
 	}
-	result := DB.Delete(&models.User{ID: body.Id})
+	result := DB.Delete(&models.User{ID: body.ID})
 	if result.Error != nil {
 		utils.Logger(result.Error.Error())
 		data := utils.FormatDBError(result.Error)
