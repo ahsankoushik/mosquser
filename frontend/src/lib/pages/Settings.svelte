@@ -33,10 +33,11 @@
         <h1 class="text-2xl font-semibold">Broker</h1>
         <div class="w-3/4 ">
             <div>
-                <Label>Broker Url</Label>
+                <Label>Broker Url (Web Socker Protocol only.)</Label>
                 <Input
                     bind:value={brokerUrl}
                 />
+                <p class="text-xs font-semibold">*This does not set url for broker. It sets the url for MosqUser Client to connect.</p>
             </div>
         </div>
         <div

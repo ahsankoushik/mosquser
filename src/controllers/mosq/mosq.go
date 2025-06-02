@@ -88,10 +88,8 @@ func Acl(c *fiber.Ctx) error {
 			},
 		)
 	}
-	utils.Logger(data)
 	var userAcl UserAcl
 	DB.Table("users").Select("users.id, acls.topic, acls.acc").Joins("inner join acls on users.id = acls.user_id").Where("users.email = ? and acls.topic = ?", data.Username,data.Topic).Scan(&userAcl)
-	utils.Logger(userAcl)
 	if data.Acc == 1 || data.Acc == 4 {
 		if userAcl.Acc == 1 || userAcl.Acc == 3 {
 			return c.SendStatus(fiber.StatusOK)
