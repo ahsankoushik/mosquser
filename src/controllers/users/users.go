@@ -84,33 +84,22 @@ func Search(c *fiber.Ctx) error {
 }
 
 func Update(c *fiber.Ctx) error {
-	var body dto_req.CreateUser
-	if err := c.BodyParser(&body); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Unable to parse data.")
-	}
-	if err := controller.Validate.Struct(&body); err != nil {
-		msg, data := utils.FormatValidationError(err)
-		_, ok := data["password"]
-		if !ok {
-			return c.Status(fiber.StatusBadRequest).JSON(dto_res.Response{
-				Status:  fiber.StatusBadRequest,
-				Message: msg,
-				Data:    data,
-			})
-		}
+	var body dto_req.UpdateUser
+	if err := controller.BodyParse(&body,c); err != nil {
+		return err
 	}
 	var userDB models.User
-	DB.Where("email = ?", body.Email).First(&userDB)
+	DB.Where("id = ?", body.ID).First(&userDB)
 	if userDB.ID < 1 {
 		return fiber.NewError(fiber.StatusNotFound, "Unable to find the user")
 	} else {
-		if body.Password == "" {
+		if body.Password != "-" {
 			password, _ := utils.HashPassword(body.Password)
 			userDB.Password = password
 		}
 		userDB.SuperUser = body.SuperUser
 		userDB.Email = body.Email
-		result := DB.Updates(&userDB)
+		result := DB.Save(&userDB)
 		if result.Error != nil {
 			data := utils.FormatDBError(result.Error)
 			return c.Status(fiber.StatusConflict).JSON(dto_res.Response{
@@ -119,7 +108,7 @@ func Update(c *fiber.Ctx) error {
 				Data:    data,
 			})
 		} else {
-			return c.JSON(dto_res.Response{
+			return c.Status(fiber.StatusOK).JSON(dto_res.Response{
 				Status:  fiber.StatusOK,
 				Message: "",
 				Data:    userDB,

@@ -183,7 +183,7 @@ class MosqClient{
         }) as MCResCol;
         return res;
     }
-    async createUser(email:string,password:string, super_user:boolean){
+    async createUser(email:string,password:string, super_user:boolean, ){
         const res = await this.hit({
             path:"/users",
             init:{
@@ -197,13 +197,14 @@ class MosqClient{
         }) as MCRes;
         return res;
     }
-    async updateUser(email:string,password:string="-", super_user:boolean){
+    async updateUser(id:number,email:string,password:string="-", super_user:boolean, ){
         const res = await this.hit({
             path:"/users",
             init:{
                 method: "PUT",
             },
             body : {
+                id,
                 email, 
                 password,
                 super_user

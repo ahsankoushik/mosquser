@@ -8,6 +8,7 @@
     import type MosqClient from "../api/client.svelte";
     import type { HTMLFormAttributes } from "svelte/elements";
     import type { MCResCol } from "../api/client.svelte";
+    import toast from "svelte-5-french-toast";
     const { 
         toggleDrawer, 
         mc, 
@@ -21,16 +22,19 @@
         update:number,
         data:MCResCol
     } =  $props();
+    let id = $state(-1)
     let email = $state("")
     let password = $state("")
     let superUser = $state(false)
     let formElement: HTMLFormElement | undefined;
     $effect(()=>{
         if(update>-1){
+            id = data.data[update].id;
             email = data.data[update].email;
             password = data.data[update].password;
             superUser = data.data[update].super_user
         }else{
+            id = -1;
             email = "";
             password = "";
             superUser = false;
@@ -65,14 +69,21 @@
                         formElement.reset();
                     }
                     get();
+                    toast.success("Added");
+                }else{
+                    toast.error(res.message)
                 }
             }else{
-                const res = await mc.updateUser(email,password,superUser);
+                console.log("its working")
+                const res = await mc.updateUser(id,email,password,superUser);
                 if(res.status == 200){
                     if(formElement != undefined){
                         formElement.reset();
                     }
                     get();
+                    toast.success("Updated")
+                }else{
+                    toast.error(data.message);
                 }
             }
         }}

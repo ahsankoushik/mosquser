@@ -78,7 +78,7 @@
                         {#if !loading}
                             {#each data.data as u, i (u.id)}
                                 <tr 
-                                    class="hover:bg-gray-50 odd:bg-white even:bg-gray-50 cursor-pointer"
+                                    class="hover:bg-gray-100 odd:bg-white even:bg-gray-50 cursor-pointer"
                                     onclick={()=>{
                                         showDrawer = true;
                                         update = i;
