@@ -5,10 +5,10 @@ services:
     image: ahsankoushik/mosq-rest-auth:v.1
     container_name: mosquser
     ports:
-      - "1883:1883"
+      - "8883:8883"
       - "9001:9001"
     volumes:
-      - ./mosquitto/mosquitto.conf:/etc/mosquitto/mosquitto.conf
+      - ./mosquitto/:/etc/mosquitto/
       # - ./mosquitto/auth-plugin:/mosquitto/auth-plugin
     restart: always
 

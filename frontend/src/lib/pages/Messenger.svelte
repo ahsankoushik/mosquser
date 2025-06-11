@@ -2,10 +2,8 @@
     import mqtt from "mqtt";
     import { onMount } from "svelte";
     import type MosqClient from "../api/client.svelte";
-    import { Topics } from "../api/stores";
     import MessengerSidebar from "../comps/MessengerSidebar.svelte";
     import Loading from "../comps/Loading.svelte";
-    import Pagination from "../comps/Pagination.svelte";
     import Label from "../components/ui/label/label.svelte";
     import Button from "../components/ui/button/button.svelte";
     import { Send } from "@lucide/svelte";
