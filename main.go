@@ -43,8 +43,8 @@ func runServer() {
 
 	app.Use(logger.New())
 	routes.AddRoutes(app)
-	host := flag.String("h", "0.0.0.0:6969", "host address" )
-
+	host := flag.String("host", "0.0.0.0:6969", "host address" )
+	flag.Parse()
 	app.Listen(*host)
 }
 
