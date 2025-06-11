@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -42,8 +43,9 @@ func runServer() {
 
 	app.Use(logger.New())
 	routes.AddRoutes(app)
+	host := flag.String("h", "0.0.0.0:6969", "host address" )
 
-	app.Listen("0.0.0.0:6969")
+	app.Listen(*host)
 }
 
 func createSuperUser() {
