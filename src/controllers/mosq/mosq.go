@@ -34,7 +34,7 @@ func Auth(c *fiber.Ctx) error {
 		msg, data := utils.FormatValidationError(err)
 		return c.Status(400).JSON(response.Response{
 			Status:  fiber.StatusBadRequest,
-			Message: msg + " here use email in username field",
+			Message: msg,
 			Data:    data,
 		})
 	}
@@ -43,7 +43,7 @@ func Auth(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusOK)
 	}
 	var userdb models.User
-	DB.Where(&models.User{Email: user.Username}).First(&userdb)
+	DB.Where(&models.User{Username: user.Username}).First(&userdb)
 	if utils.VerifyPassword(user.Password, userdb.Password) {
 		return c.Status(fiber.StatusOK).JSON(response.Response{
 			Status:  fiber.StatusOK,
@@ -53,7 +53,7 @@ func Auth(c *fiber.Ctx) error {
 	}
 	return c.Status(fiber.StatusUnauthorized).JSON(response.Response{
 		Status:  fiber.StatusUnauthorized,
-		Message: "Email or Password does not matched.",
+		Message: "Username or Password does not matched.",
 		Data:    fiber.Map{},
 	})
 }
@@ -70,7 +70,7 @@ func SuperUser(c *fiber.Ctx) error {
 		)
 	}
 	var user models.User
-	DB.Where(&models.User{Email: data.Username}).First(&user)
+	DB.Where(&models.User{Username: data.Username}).First(&user)
 	if user.SuperUser {
 		return c.SendStatus(200)
 	}
@@ -89,7 +89,7 @@ func Acl(c *fiber.Ctx) error {
 		)
 	}
 	var userAcl UserAcl
-	DB.Table("users").Select("users.id, acls.topic, acls.acc").Joins("inner join acls on users.id = acls.user_id").Where("users.email = ? and acls.topic = ?", data.Username,data.Topic).Scan(&userAcl)
+	DB.Table("users").Select("users.id, acls.topic, acls.acc").Joins("inner join acls on users.id = acls.user_id").Where("users.username = ? and acls.topic = ?", data.Username, data.Topic).Scan(&userAcl)
 	if data.Acc == 1 || data.Acc == 4 {
 		if userAcl.Acc == 1 || userAcl.Acc == 3 {
 			return c.SendStatus(fiber.StatusOK)

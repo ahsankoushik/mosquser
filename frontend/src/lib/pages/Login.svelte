@@ -5,7 +5,7 @@
     import Button from "../components/ui/button/button.svelte";
     import type MosqClient from "../api/client.svelte";
     const {mc}:{mc:MosqClient} = $props();
-    let email = $state("")
+    let username = $state("")
     let password = $state("")
     const error = mc.error;
 
@@ -25,17 +25,16 @@
         <form action=""
             onsubmit={async(e)=>{
                 e.preventDefault();
-                const data = await mc.login(email,password);
+                const data = await mc.login(username,password);
             }}
         >
             <div class="my-2">
-                <Label class="{$error.error ? "text-red-600" : ""}">Email</Label>
+                <Label class="{$error.error ? "text-red-600" : ""}">Username</Label>
                 <Input 
                     class="w-full {$error.error ? "ring ring-red-600" : ""}"
-                    placeholder="Enter your email here"
-                    type="email"
+                    placeholder="Enter your username here"
                     required
-                    bind:value={email}
+                    bind:value={username}
                 />
             </div>
             <div class="my-2">

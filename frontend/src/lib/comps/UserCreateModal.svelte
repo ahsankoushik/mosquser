@@ -23,19 +23,19 @@
         data:MCResCol
     } =  $props();
     let id = $state(-1)
-    let email = $state("")
+    let username = $state("")
     let password = $state("")
     let superUser = $state(false)
     let formElement: HTMLFormElement | undefined;
     $effect(()=>{
         if(update>-1){
             id = data.data[update].id;
-            email = data.data[update].email;
+            username = data.data[update].email;
             password = data.data[update].password;
             superUser = data.data[update].super_user
         }else{
             id = -1;
-            email = "";
+            username = "";
             password = "";
             superUser = false;
         }
@@ -63,7 +63,7 @@
         onsubmit={async(e)=>{
             e.preventDefault();
             if(update == -1){
-                const res = await mc.createUser(email,password,superUser);
+                const res = await mc.createUser(username,password,superUser);
                 if(res.status == 200){
                     if(formElement != undefined){
                         formElement.reset();
@@ -75,7 +75,7 @@
                 }
             }else{
                 console.log("its working")
-                const res = await mc.updateUser(id,email,password,superUser);
+                const res = await mc.updateUser(id,username,password,superUser);
                 if(res.status == 200){
                     if(formElement != undefined){
                         formElement.reset();
@@ -91,12 +91,11 @@
         <div class="p-4 grid grid-cols-1 gap-3">
             <!-- Add your form or content for the drawer here -->
             <div>
-                <Label for="email">Email:</Label>
+                <Label for="username">Username:</Label>
                 <Input
-                    bind:value={email}
-                    id="email"
-                    type="email"
-                    placeholder="Enter Email address here"
+                    bind:value={username}
+                    id="username"
+                    placeholder="Enter username here"
                     required
                     autocomplete="off"
                 />

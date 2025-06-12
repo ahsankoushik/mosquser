@@ -55,9 +55,9 @@ func Login(c *fiber.Ctx) error {
 		)
 	}
 	var userDB models.User
-	DB.Where(&models.User{Email: userBody.Email}).First(&userDB)
+	DB.Where(&models.User{Username: userBody.Username}).First(&userDB)
 	if utils.VerifyPassword(userBody.Password, userDB.Password) && userDB.SuperUser {
-		token, err := utils.CreateTokenWithTime(userDB.ID, userDB.Email, 30)
+		token, err := utils.CreateTokenWithTime(userDB.ID, userDB.Username, 30)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, "Unable to create token.")
 		}
@@ -74,7 +74,7 @@ func Refreash(c *fiber.Ctx) error {
 	claims, _ := c.Locals("user").(*utils.UserClaims)
 	var user models.User
 	DB.First(&user, claims.ID)
-	token, err := utils.CreateTokenWithTime(user.ID, user.Email, 30)
+	token, err := utils.CreateTokenWithTime(user.ID, user.Username, 30)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Unable to create token.")
 	}

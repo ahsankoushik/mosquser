@@ -33,18 +33,18 @@ func GetList(c *fiber.Ctx) error {
 func Create(c *fiber.Ctx) error {
 	var body dto_req.CreateUser
 
-	if err := c.BodyParser(&body); err != nil{
+	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(
 			dto_res.Response{
-				Status:fiber.StatusBadRequest,
+				Status:  fiber.StatusBadRequest,
 				Message: "Unable to parse data",
-				Data: fiber.Map{},
+				Data:    fiber.Map{},
 			},
 		)
 	}
 	pasword, _ := utils.HashPassword(body.Password)
 	var user = models.User{
-		Email:     body.Email,
+		Username:  body.Username,
 		Password:  pasword,
 		SuperUser: body.SuperUser,
 	}
@@ -75,7 +75,7 @@ func Search(c *fiber.Ctx) error {
 		body.Limit = 5
 	}
 	var users []models.User
-	DB.Limit(body.Limit).Where("super_user = 0 and email LIKE ?", "%"+body.Email+"%").Find(&users)
+	DB.Limit(body.Limit).Where("super_user = 0 and username LIKE ?", "%"+body.Username+"%").Find(&users)
 	return c.JSON(dto_res.Response{
 		Status:  200,
 		Message: "",
@@ -85,7 +85,7 @@ func Search(c *fiber.Ctx) error {
 
 func Update(c *fiber.Ctx) error {
 	var body dto_req.UpdateUser
-	if err := controller.BodyParse(&body,c); err != nil {
+	if err := controller.BodyParse(&body, c); err != nil {
 		return err
 	}
 	var userDB models.User
@@ -98,7 +98,7 @@ func Update(c *fiber.Ctx) error {
 			userDB.Password = password
 		}
 		userDB.SuperUser = body.SuperUser
-		userDB.Email = body.Email
+		userDB.Username = body.Username
 		result := DB.Save(&userDB)
 		if result.Error != nil {
 			data := utils.FormatDBError(result.Error)
@@ -148,6 +148,3 @@ func DeleteUser(c *fiber.Ctx) error {
 	}
 
 }
-
-
-

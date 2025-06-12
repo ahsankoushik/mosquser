@@ -43,16 +43,16 @@ func runServer() {
 
 	app.Use(logger.New())
 	routes.AddRoutes(app)
-	host := flag.String("host", "0.0.0.0:6969", "host address" )
+	host := flag.String("host", "0.0.0.0:6969", "host address")
 	flag.Parse()
 	app.Listen(*host)
 }
 
 func createSuperUser() {
-	var email string
+	var username string
 	var password string
-	fmt.Println("Enter email address: ")
-	fmt.Scan(&email)
+	fmt.Println("Enter username: ")
+	fmt.Scan(&username)
 	fmt.Println("Enter password: ")
 	fmt.Scan(&password)
 	hashedPassword, err := utils.HashPassword(password)
@@ -61,7 +61,7 @@ func createSuperUser() {
 	}
 	db := config.ConnectDB()
 	user := models.User{
-		Email:     email,
+		Username:  username,
 		Password:  hashedPassword,
 		SuperUser: true,
 	}

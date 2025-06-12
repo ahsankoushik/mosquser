@@ -14,7 +14,7 @@ type (
 		ID        uint      `json:"id"`
 		CreatedAt time.Time `json:"created"`
 		UpdatedAt time.Time `json:"updated"`
-		Email     string    `json:"email"`
+		Username  string    `json:"username"`
 		SuperUser bool      `json:"super_user"`
 		Token     string    `json:"token"`
 	}

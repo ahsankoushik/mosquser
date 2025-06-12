@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type (
 	Search struct {
-		Email string
+		Username string
 		Limit int
 	}
 	Paginator struct {
@@ -12,7 +12,7 @@ type (
 		PerPage int
 	}
 	CreateUser struct {
-		Email     string `json:"email" validate:"required,email"`
+		Username string `json:"username" validate:"required"`
 		Password  string `json:"password" validate:"required,min=8" `
 		SuperUser bool   `json:"super_user"`
 	}

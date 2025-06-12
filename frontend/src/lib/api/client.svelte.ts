@@ -58,7 +58,7 @@ class MosqClient{
 
     private constructor(){
         this.host = import.meta.env.VITE_HOST;
-        // this.host = location.protocol + "//" + location.host
+        this.host = location.protocol + "//" + location.host
         this.headers = {
             "Content-Type" : "application/json", 
         };
@@ -122,7 +122,7 @@ class MosqClient{
         }
     }
 
-    async login(email:string, password:string){
+    async login(username:string, password:string){
         this.loading = true
         const log =  await this.hit({
             path:"/auth/login",
@@ -130,7 +130,7 @@ class MosqClient{
                 method:"POST",
             },
             body:{
-                email,
+                username,
                 password
             }
         }) as MCRes;
@@ -184,21 +184,21 @@ class MosqClient{
         }) as MCResCol;
         return res;
     }
-    async createUser(email:string,password:string, super_user:boolean, ){
+    async createUser(username:string,password:string, super_user:boolean, ){
         const res = await this.hit({
             path:"/users",
             init:{
                 method: "POST",
             },
             body : {
-                email, 
+                username, 
                 password,
                 super_user
             }
         }) as MCRes;
         return res;
     }
-    async updateUser(id:number,email:string,password:string="-", super_user:boolean, ){
+    async updateUser(id:number,username:string,password:string="-", super_user:boolean, ){
         const res = await this.hit({
             path:"/users",
             init:{
@@ -206,7 +206,7 @@ class MosqClient{
             },
             body : {
                 id,
-                email, 
+                username, 
                 password,
                 super_user
             }
@@ -225,12 +225,12 @@ class MosqClient{
         }) as MCRes;
         return res
     }
-    async userSearch(email:string){
+    async userSearch(username:string){
         const res = await this.hit({
             path:"/users/search",
             params:{
                 limit:5,
-                email
+                username
             }
         }) as MCRes;
         return res;
