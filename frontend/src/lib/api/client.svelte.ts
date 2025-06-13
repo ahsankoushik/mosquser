@@ -58,7 +58,7 @@ class MosqClient{
 
     private constructor(){
         this.host = import.meta.env.VITE_HOST;
-        this.host = location.protocol + "//" + location.host
+        // this.host = location.protocol + "//" + location.host
         this.headers = {
             "Content-Type" : "application/json", 
         };

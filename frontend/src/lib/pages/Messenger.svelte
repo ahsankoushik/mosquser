@@ -72,6 +72,12 @@
         }
         client.subscribe(topic)
     }
+    const unsubscribe = (topic:string) =>{ 
+        if(client == undefined){
+            return
+        }
+        client.unsubscribe(topic)
+    }
     const scrollToBottom = ()=>{
         if(bottomElement == undefined){
             return
@@ -94,6 +100,7 @@
     <MessengerSidebar 
         {mc}
         {subscribe}
+        {unsubscribe}
     />
     <div class="w-[70vw] min-w-[400px] border  relative overflow-x-scroll"
     >
