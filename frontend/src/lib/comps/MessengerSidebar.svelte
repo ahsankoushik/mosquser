@@ -50,17 +50,17 @@
         });
         topic = "";
     };
-    const handleSavedSubscribe = (topic:string)=>{ 
+    const handleSavedSubscribe = (topic: string) => {
         subscribe(topic);
-        Topics.update((t)=>{
-            for(let i = 0; i < t.length; i++){
-                if(t[i].topic == topic){
+        Topics.update((t) => {
+            for (let i = 0; i < t.length; i++) {
+                if (t[i].topic == topic) {
                     t[i].connected = true;
                 }
             }
-            return t
-        })
-    }
+            return t;
+        });
+    };
     const handleUnsubscribe = (topic: string) => {
         if (topic == "") {
             return;
@@ -68,7 +68,14 @@
         unsubscribe(topic);
         Topics.update((t) => {
             t = t.filter((e) => {
-                return e.topic != topic;
+                if (e.topic == topic) {
+                    if (e.saved) {
+                        e.connected = false;
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
             });
             return t;
         });
@@ -78,15 +85,24 @@
             return;
         }
         let topics = localStorage.getItem("mqtt_topics");
-        console.log(topics);
         let topicsArr = [];
         if (topics != null) {
             topicsArr = JSON.parse(topics);
             console.log(topics);
         }
         topicsArr.push(topic);
-        console.log(topicsArr);
-        localStorage.setItem("mqtt_topics", JSON.stringify(topicsArr));
+        Topics.update((t) => {
+            for (let i = 0; i < t.length; i++) {
+                if (t[i].topic == topic) {
+                    t[i].saved = true;
+                }
+            }
+            return t;
+        });
+        localStorage.setItem(
+            "mqtt_topics",
+            JSON.stringify([...new Set(topicsArr)]),
+        );
     };
     const handleDeleteFromLocal = (topic: string) => {
         if (topic == "") {
@@ -95,15 +111,24 @@
         let topicsArr = JSON.parse(
             localStorage.getItem("mqtt_topics") || "",
         ) as Array<string>;
-        topicsArr.filter((e) => {
+        topicsArr = topicsArr.filter((e) => {
             return e != topic;
         });
         Topics.update((t) => {
-            t.filter((a) => {
-                a.topic != topic;
+            t = t.filter((a) => {
+                if (a.topic != topic) {
+                    if (a.connected) {
+                        a.saved = false;
+                        console.log(a.saved);
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
             });
             return t;
         });
+        console.log(get(Topics))
         localStorage.setItem("mqtt_topics", JSON.stringify(topicsArr));
     };
 </script>
