@@ -1,12 +1,12 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
     import type MosqClient from "../api/client.svelte";
-    import { Topics } from "../api/stores";
+    import { Topics, type Topic } from "../api/stores";
     import { get } from "svelte/store";
     import Input from "../components/ui/input/input.svelte";
     import Label from "../components/ui/label/label.svelte";
     import Button from "../components/ui/button/button.svelte";
-    import { BadgePlus, Save, Unplug } from "@lucide/svelte";
+    import { BadgePlus, Save, Trash2, Unplug } from "@lucide/svelte";
     import ButtonWithHelp from "./ButtonWithHelp.svelte";
 
     const {
@@ -20,13 +20,22 @@
     } = $props();
     let topic = $state("");
 
-    // onMount(()=>{
-    //     const topics = localStorage.getItem("mqtt_topics")
-    //     if(topics != null){
-    //         Topics.set(JSON.parse(topics))
-    //     }
-    // })
-    const handleSave = () => {
+    onMount(() => {
+        const topicsStr = localStorage.getItem("mqtt_topics");
+        if (topicsStr != null) {
+            const topics = JSON.parse(topicsStr);
+            let topicsArr: Array<Topic> = [];
+            for (let i = 0; i < topics.length; i++) {
+                topicsArr.push({
+                    topic: topics[i],
+                    connected: false,
+                    saved: true,
+                });
+            }
+            Topics.set(topicsArr);
+        }
+    });
+    const handleSubscribe = () => {
         if (topic == "") {
             return;
         }
@@ -35,11 +44,23 @@
             t.push({
                 topic,
                 connected: true,
+                saved: false,
             });
             return t;
         });
         topic = "";
     };
+    const handleSavedSubscribe = (topic:string)=>{ 
+        subscribe(topic);
+        Topics.update((t)=>{
+            for(let i = 0; i < t.length; i++){
+                if(t[i].topic == topic){
+                    t[i].connected = true;
+                }
+            }
+            return t
+        })
+    }
     const handleUnsubscribe = (topic: string) => {
         if (topic == "") {
             return;
@@ -52,32 +73,71 @@
             return t;
         });
     };
-    const handleSaveToLocal = ()=>{
-        if(topic ==""){
-            return
+    const handleSaveToLocal = (topic: string) => {
+        if (topic == "") {
+            return;
         }
         let topics = localStorage.getItem("mqtt_topics");
+        console.log(topics);
         let topicsArr = [];
-        if(topics != null){
+        if (topics != null) {
             topicsArr = JSON.parse(topics);
+            console.log(topics);
         }
         topicsArr.push(topic);
+        console.log(topicsArr);
         localStorage.setItem("mqtt_topics", JSON.stringify(topicsArr));
-    }
+    };
+    const handleDeleteFromLocal = (topic: string) => {
+        if (topic == "") {
+            return;
+        }
+        let topicsArr = JSON.parse(
+            localStorage.getItem("mqtt_topics") || "",
+        ) as Array<string>;
+        topicsArr.filter((e) => {
+            return e != topic;
+        });
+        Topics.update((t) => {
+            t.filter((a) => {
+                a.topic != topic;
+            });
+            return t;
+        });
+        localStorage.setItem("mqtt_topics", JSON.stringify(topicsArr));
+    };
 </script>
 
 {#snippet subscribeElement()}
-    <Button onclick={handleSave}>
+    <Button onclick={handleSubscribe}>
         <BadgePlus />
     </Button>
 {/snippet}
-{#snippet saveToLocal({topic})}
-    <button class="hover:bg-gray-300 p-1 rounded-lg" onclick={() => {}}
-        ><Save /></button
+{#snippet subscribeSaved({ topic }: { topic: string })}
+    <button
+        class="hover:bg-gray-300 p-1 rounded-lg"
+        onclick={() => {
+            handleSavedSubscribe(topic);
+        }}><BadgePlus /></button
     >
 {/snippet}
-
-{#snippet unsubscribeElement({topic})}
+{#snippet saveToLocal({ topic }: { topic: string })}
+    <button
+        class="hover:bg-gray-300 p-1 rounded-lg"
+        onclick={() => {
+            handleSaveToLocal(topic);
+        }}><Save /></button
+    >
+{/snippet}
+{#snippet deleteFromLocal({ topic }: { topic: string })}
+    <button
+        class="hover:bg-gray-300 p-1 rounded-lg"
+        onclick={() => {
+            handleDeleteFromLocal(topic);
+        }}><Trash2 /></button
+    >
+{/snippet}
+{#snippet unsubscribeElement({ topic }: { topic: string })}
     <button
         class="hover:bg-gray-300 p-1 rounded-lg"
         onclick={() => {
@@ -97,7 +157,7 @@
                     onkeydown={(e) => {
                         if (e != null) {
                             if (e.key == "Enter") {
-                                handleSave();
+                                handleSubscribe();
                             }
                         }
                     }}
@@ -117,12 +177,32 @@
                     {tp.topic}
                 </p>
                 <div class="flex gap-1">
-                    <ButtonWithHelp
-                        child={unsubscribeElement}
-                        helpText={"Unsubscribe"}
-                        topic={{topic:tp.topic}}
-                    />
-                    <ButtonWithHelp child={saveToLocal} helpText={"Save to browser"} topic={tp.topic} />
+                    {#if tp.connected}
+                        <ButtonWithHelp
+                            child={unsubscribeElement}
+                            helpText={"Unsubscribe"}
+                            topic={{ topic: tp.topic }}
+                        />
+                    {:else}
+                        <ButtonWithHelp
+                            child={subscribeSaved}
+                            helpText={"Subscribe"}
+                            topic={{ topic: tp.topic }}
+                        />
+                    {/if}
+                    {#if tp.saved}
+                        <ButtonWithHelp
+                            child={deleteFromLocal}
+                            helpText={"Delete From Browser"}
+                            topic={{ topic: tp.topic }}
+                        />
+                    {:else}
+                        <ButtonWithHelp
+                            child={saveToLocal}
+                            helpText={"Save to browser"}
+                            topic={{ topic: tp.topic }}
+                        />
+                    {/if}
                 </div>
             </div>
         {/each}
