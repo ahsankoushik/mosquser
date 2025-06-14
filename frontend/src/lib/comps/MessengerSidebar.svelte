@@ -114,23 +114,27 @@
         topicsArr = topicsArr.filter((e) => {
             return e != topic;
         });
+        console.log(topicsArr);
         Topics.update((t) => {
             t = t.filter((a) => {
-                if (a.topic != topic) {
+                if (a.topic == topic) {
                     if (a.connected) {
                         a.saved = false;
                         console.log(a.saved);
                         return true;
+                    } else {
+                        return false;
                     }
-                    return false;
+                } else {
+                    return true;
                 }
-                return true;
             });
             return t;
         });
-        console.log(get(Topics))
+        console.log(get(Topics));
         localStorage.setItem("mqtt_topics", JSON.stringify(topicsArr));
     };
+    $inspect($Topics);
 </script>
 
 {#snippet subscribeElement()}
