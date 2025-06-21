@@ -81,7 +81,7 @@
                                         showDrawer = true;
                                     }}
                                 >
-                                    <td class="px-4 py-2 border border-gray-300">{device.user.email}</td>
+                                    <td class="px-4 py-2 border border-gray-300">{device.user.username}</td>
                                     <td class="px-4 py-2 border border-gray-300">{device.topic}</td>
                                     <td class="px-4 py-2 border border-gray-300">{device.acc == 3 ? "Read & Write" : device.acc == 2 ? "Write" : "Read"}</td>
                                     <td class="px-4 py-2 border border-gray-300">{new Date(device.created).toLocaleString()}</td>

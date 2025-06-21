@@ -11,11 +11,11 @@
       
       <!-- Optional Text -->
       <div class="flex items-center gap-2 text-xl font-semibold ">
-        <ShieldX size={48} color="purple" />
+        <ShieldX size={48} color="black" />
         <span>MosqUser</span>
       </div>
       <!-- Spinner -->
-      <div class="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-4 border-black border-t-transparent"></div>
       {#if text != ""}
         {text}
       {/if}

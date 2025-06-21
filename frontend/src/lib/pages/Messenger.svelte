@@ -72,6 +72,12 @@
         }
         client.subscribe(topic)
     }
+    const unsubscribe = (topic:string) =>{ 
+        if(client == undefined){
+            return
+        }
+        client.unsubscribe(topic)
+    }
     const scrollToBottom = ()=>{
         if(bottomElement == undefined){
             return
@@ -94,8 +100,9 @@
     <MessengerSidebar 
         {mc}
         {subscribe}
+        {unsubscribe}
     />
-    <div class="w-[70vw] min-w-[400px] border  relative"
+    <div class="w-[70vw] min-w-[400px] border  relative overflow-x-scroll"
     >
         {#each messages as msg}
             <div
@@ -109,8 +116,8 @@
                 </div>
             </div>
         {/each}
-        <div bind:this={bottomElement} class="h-16 "></div>
-        <div class="absolute bottom-0 z-10 w-full border-t flex gap-2 p-1 bg-white overflow-x-scroll">
+        <div bind:this={bottomElement} class="h-20 "></div>
+        <div class="fixed bottom-0 z-10 w-full border-t flex gap-2 p-1 bg-white overflow-x-scroll">
             <div class="w-[20vw] min-w-[120px]">
                 <Label for="topic-send">Topic</Label>
                 <input id="topic-send"

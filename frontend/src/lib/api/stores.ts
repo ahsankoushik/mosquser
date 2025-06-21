@@ -1,9 +1,10 @@
 import { writable } from "svelte/store";
 
 
-interface Topic{
+export interface Topic{
     topic: string,
-    connected: boolean
+    connected: boolean,
+    saved: boolean
 }
 
 export const Topics = writable<Array<Topic>>([])

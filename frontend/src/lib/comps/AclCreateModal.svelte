@@ -25,7 +25,7 @@
         {label:"Write",value:2},
         {label:"Read & Write",value:3},
     ]
-    let email = $state("")
+    let username = $state("")
     let topic = $state("")
     let acc = $state(Accs[0])
     let openSerachHelper = $state(false)
@@ -40,13 +40,13 @@
 
     $effect(()=>{
         if(update>-1){
-            email = data.data[update].user.email;
+            username = data.data[update].user.username;
             topic = data.data[update].topic;
             acc = Accs.filter((a)=>a.value == data.data[update].acc)[0];
             userID = data.data[update].user.id;
             id = data.data[update].id;
         }else{
-            email = "";
+            username = "";
             topic = "";
             acc = Accs[0];
             userID = -1;
@@ -105,12 +105,12 @@
         <div class="p-4 grid grid-cols-1 gap-3">
             <!-- Add your form or content for the drawer here -->
             <div>
-                <Label for="email">Email:</Label>
+                <Label for="username">Username:</Label>
                 <Input
-                    bind:value={email}
-                    id="email"
-                    type="email"
-                    placeholder="Enter Email address here"
+                    bind:value={username}
+                    id="username"
+                    type="username"
+                    placeholder="Enter username address here"
                     required
                     oninput={(e)=>{
                         if(timeOutId != undefined){
@@ -118,7 +118,7 @@
                         }
                         userID = -1;
                         timeOutId = setTimeout(async()=>{
-                            searchData = await mc.userSearch(email);
+                            searchData = await mc.userSearch(username);
                         },1000)
                     }}
                     on:focusin={()=>{
@@ -139,9 +139,9 @@
                                 class="px-3 hover:bg-blue-600 hover:text-white cursor-pointer"
                                 onclick={()=>{
                                     userID = user.id;
-                                    email = user.email;
+                                    username = user.username;
                                 }}
-                            >{user.email}</li>
+                            >{user.username}</li>
                         {/each}
                     </ul>
                 {/if}

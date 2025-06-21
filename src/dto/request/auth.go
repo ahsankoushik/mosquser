@@ -2,7 +2,7 @@ package dto_req
 
 type (
 	User struct {
-		Email    string `gorm:"unique,not null,index" validate:"required,email" json:"email"`
+		Username string `gorm:"unique,not null,index" validate:"required" json:"username"`
 		Password string `validate:"required,min=8" json:"password"`
 	}
 )
