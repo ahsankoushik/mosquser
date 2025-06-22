@@ -7,6 +7,7 @@
     import Label from "../components/ui/label/label.svelte";
     import Button from "../components/ui/button/button.svelte";
     import { Send } from "@lucide/svelte";
+    import toast from "svelte-5-french-toast";
 
     const { mc }:{mc:MosqClient} = $props();
     let mqttConnected = $state(false);
@@ -31,6 +32,7 @@
             if(!mqttConnected){
                 mqttConnected = true;
                 client = undefined;
+                toast.error("Failed to connect to MQTT broker. Please check your connection settings.")
             }
         }, 5000);
         const res = await mc.getKeys(["broker_url"]);
