@@ -2,6 +2,9 @@
 
 ***Thanks to [jpmens](https://github.com/jpmens) for the awosome [mosquitto-auth-plug](https://github.com/jpmens/mosquitto-auth-plug).***
 
+[live demo](https://mosquser.designdebug.com)
+You will need to have a super user account for that you can mail me at <ahsankoushk@gmail.com>
+
 ## Run Or Build this project 
 
 ### Prerequisites
