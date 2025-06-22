@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ShieldX } from "@lucide/svelte";
+    import { ShieldPlus } from "@lucide/svelte";
     const {text=""}:{text:string} = $props();
 </script>
 
@@ -11,7 +11,7 @@
       
       <!-- Optional Text -->
       <div class="flex items-center gap-2 text-xl font-semibold ">
-        <ShieldX size={48} color="black" />
+        <ShieldPlus size={48} color="black" />
         <span>MosqUser</span>
       </div>
       <!-- Spinner -->

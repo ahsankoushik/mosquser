@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { LogIn, ShieldX } from "@lucide/svelte";
+    import{ LogIn,  ShieldPlus } from "@lucide/svelte";
     import Input from "../components/ui/input/input.svelte";
     import Label from "../components/ui/label/label.svelte";
     import Button from "../components/ui/button/button.svelte";
@@ -14,7 +14,7 @@
 <div class="h-screen flex justify-center items-center ">
     <div class="w-full sm:w-1/2 lg:w-1/3 mx-16 sm:mx-0">
         <div class=" flex justify-center text-[38px] font-bold gap-2 items-center">
-            <ShieldX size={46} color={"purple"}/>
+            <ShieldPlus size={46} color={"purple"}/>
             <h1 class="text-center">MosqUser</h1>
         </div>
         <div class="my-2">
