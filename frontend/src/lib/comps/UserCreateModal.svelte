@@ -6,9 +6,9 @@
     import Button from "../components/ui/button/button.svelte";
     import { Save, Trash2 } from "@lucide/svelte";
     import type MosqClient from "../api/client.svelte";
-    import type { HTMLFormAttributes } from "svelte/elements";
     import type { MCResCol } from "../api/client.svelte";
     import toast from "svelte-5-french-toast";
+    import { onMount } from "svelte";
     const { 
         toggleDrawer, 
         mc, 
@@ -28,11 +28,28 @@
     let superUser = $state(false)
     let formElement: HTMLFormElement | undefined;
     $effect(()=>{
+        console.log("data", data.data);
         if(update>-1){
+            console.log(data.data[update]);;
+            id = data.data[update].id;
+            username = data.data[update].username;
+            password = data.data[update].password;
+            superUser = data.data[update].super_user;
+            console.log("update", update, id, username, password, superUser);
+        }else{
+            id = -1;
+            username = "";
+            password = "";
+            superUser = false;
+        }
+    })
+    onMount(()=>{
+        console.log("Mounted UserCreateModal");
+        if(update > -1){
             id = data.data[update].id;
             username = data.data[update].email;
             password = data.data[update].password;
-            superUser = data.data[update].super_user
+            superUser = data.data[update].super_user;
         }else{
             id = -1;
             username = "";
