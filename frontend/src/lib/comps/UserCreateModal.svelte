@@ -28,28 +28,12 @@
     let superUser = $state(false)
     let formElement: HTMLFormElement | undefined;
     $effect(()=>{
-        console.log("data", data.data);
         if(update>-1){
-            console.log(data.data[update]);;
             id = data.data[update].id;
             username = data.data[update].username;
             password = data.data[update].password;
             superUser = data.data[update].super_user;
             console.log("update", update, id, username, password, superUser);
-        }else{
-            id = -1;
-            username = "";
-            password = "";
-            superUser = false;
-        }
-    })
-    onMount(()=>{
-        console.log("Mounted UserCreateModal");
-        if(update > -1){
-            id = data.data[update].id;
-            username = data.data[update].email;
-            password = data.data[update].password;
-            superUser = data.data[update].super_user;
         }else{
             id = -1;
             username = "";
