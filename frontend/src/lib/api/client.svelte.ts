@@ -153,6 +153,8 @@ class MosqClient{
         });
         if (res.status == 200){
            this.setAuthHeader(res.data.token)
+        }else{
+            this.loggedin = false
         }
     }
     async logOut(){
