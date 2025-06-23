@@ -57,8 +57,11 @@ class MosqClient{
 
 
     private constructor(){
-        this.host = import.meta.env.VITE_HOST;
-        // this.host = location.protocol + "//" + location.host
+        if(import.meta.env.MODE === "development"){
+            this.host = import.meta.env.VITE_HOST;
+        }else{
+            this.host = location.protocol + "//" + location.host
+        }
         this.headers = {
             "Content-Type" : "application/json", 
         };
@@ -153,6 +156,8 @@ class MosqClient{
         });
         if (res.status == 200){
            this.setAuthHeader(res.data.token)
+        }else{
+            this.loggedin = false
         }
     }
     async logOut(){
