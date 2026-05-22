@@ -2,15 +2,15 @@ version: '3.8'
 
 services:
   mosquitto:
-    image: ahsankoushik/mosq-rest-auth:v.1
+    image: ahsankoushik/mosquser:latest
     container_name: mosquser
     ports:
       - "8883:8883"
       - "9001:9001"
     volumes:
       - ./mosquitto/mosquitto.conf:/etc/mosquitto/mosquitto.conf
-      - /etc/letsencrypt/live/mosquser.designdebug.com/fullchain.pem:/mosquitto/certs/fullchain.pem:ro
-      - /etc/letsencrypt/live/mosquser.designdebug.com/privkey.pem:/mosquitto/certs/privkey.pem:ro
+      - /etc/letsencrypt/live/mosquser.designdebug.com-0002/fullchain.pem:/mosquitto/certs/fullchain.pem:ro
+      - /etc/letsencrypt/live/mosquser.designdebug.com-0002/privkey.pem:/mosquitto/certs/privkey.pem:ro
     restart: always
 
 
