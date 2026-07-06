@@ -1,3 +1,4 @@
+
 package config
 
 import (
@@ -5,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -17,16 +18,23 @@ var (
 func ConnectDB() *gorm.DB {
 	once.Do(func() {
 		var err error
-		DB, err = gorm.Open(sqlite.Open("data.db"))
+
+		// Update these values as needed
+		dsn := "host=localhost user=youruser password=yourpassword dbname=yourdb port=5432 sslmode=disable TimeZone=Asia/Dhaka"
+		DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err != nil {
 			log.Fatalf("Failed to connect to the database: %v", err)
 		}
 
 		// Configure connection pool
-		sqlDB, _ := DB.DB()
-		sqlDB.SetMaxOpenConns(10)           // Maximum number of open connections
-		sqlDB.SetMaxIdleConns(5)            // Maximum number of idle connections
-		sqlDB.SetConnMaxLifetime(time.Hour) // Maximum lifetime of a connection
+		sqlDB, err := DB.DB()
+		if err != nil {
+			log.Fatalf("Failed to get sql.DB from gorm.DB: %v", err)
+		}
+		sqlDB.SetMaxOpenConns(10)
+		sqlDB.SetMaxIdleConns(5)
+		sqlDB.SetConnMaxLifetime(time.Hour)
 	})
 	return DB
 }
+
